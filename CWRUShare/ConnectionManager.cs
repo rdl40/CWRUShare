@@ -12,7 +12,7 @@ namespace CWRUNet
 
         public static void RegisterUser()
         {
-            PeerName name = new PeerName(SettingsManager.getName(), PeerNameType.Unsecured);
+            PeerName name = new PeerName("eecs441", PeerNameType.Unsecured);
             PeerNameRegistration registration = new PeerNameRegistration();
 
             registration.PeerName = name;
@@ -24,7 +24,7 @@ namespace CWRUNet
         public static void ResolveUsers()
         {
             PeerNameResolver resolver = new PeerNameResolver();
-            PeerName name = new PeerName(SettingsManager.getName());
+            PeerName name = new PeerName("eecs441");
 
             PeerNameRecordCollection results = resolver.Resolve(name);
 
