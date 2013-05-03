@@ -7,7 +7,7 @@ using System.Net.PeerToPeer;
 
 namespace CWRUNet
 {
-    static class ConnectionManager
+    public static class ConnectionManager
     {
 
         public static void RegisterUser()
@@ -27,6 +27,11 @@ namespace CWRUNet
             PeerName name = new PeerName("eecs441");
 
             PeerNameRecordCollection results = resolver.Resolve(name);
+
+            foreach (PeerNameRecord x in results)
+            {
+                Console.WriteLine(x.PeerName);
+            }
 
             //do some stuff
 

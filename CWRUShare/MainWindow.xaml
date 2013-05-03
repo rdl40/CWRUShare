@@ -9,6 +9,7 @@
         <FolderViewControl:FolderViewWPF x:Name="FolderView2" HorizontalAlignment="Left" Height="299" Margin="191,59,0,0" VerticalAlignment="Top" Width="161" ShowCheckBoxes="True" AutoCheckChildren="True" AutoUpdate="False" Loaded="FolderView2_Loaded" ShowHiddenObjects="False" ShowSpecialFolders="False"/>
         <Button Content="Button" HorizontalAlignment="Left" Margin="422,59,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
         <Button Content="Button" HorizontalAlignment="Left" Margin="422,107,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_2"/>
+        <Button Content="List Users" HorizontalAlignment="Left" Margin="422,166,0,0" VerticalAlignment="Top" Width="75"/>
 
     </Grid>
 </Window>

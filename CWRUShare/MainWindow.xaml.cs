@@ -17,6 +17,7 @@ using LogicNP.ShellObjects;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections;
+using CWRUNet;
 
 namespace CWRUShare
 {
@@ -51,6 +52,8 @@ namespace CWRUShare
                     recurseDirectories(shareManager.getNextNameHolder(), x, shareManager);
                 }
             }
+
+            ConnectionManager.RegisterUser();
         }
 
         private void recurseDirectories(int parentNode, FOVTreeNode currentNode, ShareManager manager)
