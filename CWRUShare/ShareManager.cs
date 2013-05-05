@@ -61,9 +61,9 @@ namespace CWRUShare
             return nameholder++;
         }
 
-        public DirectoryItem GetDirectoryItemFromNameHolder(int nameholder)
+        public DirectoryItem GetDirectoryItemFromNameHolder(int index)
         {
-            return data[nameholder];
+            return data[index];
         }
 
         public System.Drawing.Icon GetDirectoryItemIcon(int index)

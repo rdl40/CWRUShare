@@ -21,6 +21,7 @@ using System.Collections;
 using CWRUNet;
 using Lidgren.Network;
 using Task = System.Threading.Tasks.Task;
+using LogicNP.FileViewControl;
 
 namespace CWRUShare
 {
@@ -39,6 +40,8 @@ namespace CWRUShare
 
             FolderView.SetSpecialFolderAsRoot(LogicNP.FolderViewControl.SpecialFolders.DRIVES);
 
+            FolderView.FileView = FileView1;
+
             ConnectionManager.Listen(new SendOrPostCallback(Listener));
         }
 
@@ -54,7 +57,7 @@ namespace CWRUShare
                     isFirst = false;
                     x.ShowCheckBox = false;
                     supertemp = x;
-                    recurseDirectories(shareManager.getNextNameHolder(), x, shareManager);
+                    recurseDirectories(shareManager.GetNextNameHolder(), x, shareManager);
                 }
             }
 
@@ -63,17 +66,17 @@ namespace CWRUShare
 
         private void recurseDirectories(int parentNode, FOVTreeNode currentNode, ShareManager manager)
         {
-            int currentNameHolder = manager.getNextNameHolder();
+            int currentNameHolder = manager.GetNextNameHolder();
 
             DirectoryItem item = new DirectoryItem();
 
             item.Name = currentNode.DisplayName;
             item.Icon = currentNode.IconIndex;
 
-            manager.addIcon(currentNode.IconIndex, currentNode.GetShellIcon(ShellIconTypes.Thumbnail));
-            manager.addData(currentNameHolder, item);
+            manager.AddIcon(currentNode.IconIndex, currentNode.GetShellIcon(LogicNP.FolderViewControl.ShellIconTypes.Thumbnail));
+            manager.AddData(currentNameHolder, item);
 
-            manager.addInstructions(parentNode + "|" + currentNameHolder);
+            manager.AddInstructions(parentNode + "|" + currentNameHolder);
             Console.WriteLine(parentNode + "|" + currentNameHolder);
 
             if (currentNode.GetChildren(false) != 0)
@@ -100,7 +103,7 @@ namespace CWRUShare
                     isFirst = false;
                     x.ShowCheckBox = false;
                     supertemp = x;
-                    recurseDirectories2(shareManager.getNextNameHolder(), x);
+                    recurseDirectories2(shareManager.GetNextNameHolder(), x);
                 }
             }
         }
@@ -109,7 +112,7 @@ namespace CWRUShare
         {
 
             
-            int currentNameHolder = shareManager.getNextNameHolder();
+            int currentNameHolder = shareManager.GetNextNameHolder();
 
             
 
@@ -119,9 +122,9 @@ namespace CWRUShare
                 item.Name = currentNode.DisplayName;
                 item.Icon = currentNode.IconIndex;
 
-                shareManager.addIcon(currentNode.IconIndex, currentNode.GetShellIcon(ShellIconTypes.Thumbnail));
-                shareManager.addData(currentNameHolder, item);
-                shareManager.addInstructions(parentNode + "|a" + currentNameHolder);
+                shareManager.AddIcon(currentNode.IconIndex, currentNode.GetShellIcon(LogicNP.FolderViewControl.ShellIconTypes.Thumbnail));
+                shareManager.AddData(currentNameHolder, item);
+                shareManager.AddInstructions(parentNode + "|a" + currentNameHolder);
 
                 if (currentNode.GetChildren(true) != 0)
                     recurseDirectories2(currentNameHolder, currentNode.GetChild(true));
@@ -156,7 +159,7 @@ namespace CWRUShare
                 ((FOVTreeNode)toBeDelted[x]).Delete();
             }
 
-            int h = share.getNextNameHolder();
+            int h = share.GetNextNameHolder();
             Console.WriteLine(h + "asdfasdf");
 
 
@@ -176,9 +179,9 @@ namespace CWRUShare
 
             Dictionary<int, FOVTreeNode> refholder = new Dictionary<int, FOVTreeNode>();
 
-            using (StringReader reader = new StringReader(share.getInstructions()))
+            using (StringReader reader = new StringReader(share.GetInstructions()))
             {
-                Console.WriteLine(share.getInstructions());
+                Console.WriteLine(share.GetInstructions());
                 int lastindex = 1;
                 FOVTreeNode tempnode = FolderView2.GetFirstNode();
                 refholder.Add(lastindex, tempnode);
@@ -196,7 +199,7 @@ namespace CWRUShare
                         //temp.Icon);
                     }
 
-                    DirectoryItem temp = share.getDirectoryItemFromNameHolder(getSecondHolder(line));
+                    DirectoryItem temp = share.GetDirectoryItemFromNameHolder(getSecondHolder(line));
 
                     refholder.Add(getSecondHolder(line), FolderView2.AddCustomNode(refholder[getFirstHolder(line)], NodeAddRelationTypes.AddAsLastChild, temp.Name, temp.Icon, temp.Icon));
                 }
@@ -242,6 +245,38 @@ namespace CWRUShare
             await tasker;
 
             Console.WriteLine("oooh yaaaa");
+        }
+
+        private void FolderView_BeforeCheck(object sender, FolderViewCancelEventArgs e)
+        {
+            Console.WriteLine("wieners");
+        }
+
+        private void FolderView_QueryNodeCheckState(object sender, FolderViewEventArgs e)
+        {
+            Console.WriteLine("wieners");
+        }
+
+        private void FileView1_CurrentFolderChanged(object sender, EventArgs e)
+        {
+            FOVTreeNode node = FolderView.SelectedNode;
+            if (node == null)
+                return;
+
+            // Initially, make all items checked/unchecked depending on FolderView node check state.
+            FileView1.CheckItems(node.Checked ? CheckTypes.All : CheckTypes.None);
+
+            // sync check states of all items in FileView with those of all child nodes of the 
+            // selected node in FolderView
+            node = node.GetChild(false);
+            while (node != null)
+            {
+                LogicNP.FileViewControl.ListItem item = FileView1.GetItemFromName(node.DisplayName);
+                if (item != null)
+                    item.CheckState = (ItemCheckStates)node.CheckState;
+
+                node = node.NextSibling;
+            }
         }
 
 

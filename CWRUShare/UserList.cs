@@ -8,49 +8,37 @@ using System.Threading.Tasks;
 namespace CWRUShare
 {
     [Serializable()]
-    static class UserList
+    public class UserList
     {
-        private static List<User> users;
+        protected Dictionary<string, DateTime> users;
 
-        public static void AddUser(string ipAddress)
+        public void AddUser(string ipAddress)
         {
-            users.Add(new User(ipAddress, DateTime.Now.AddMinutes(5)));
+            users.Add(ipAddress, DateTime.Now.AddMinutes(5));
         }
 
-        public static void UpdateUser(string ipAddress)
+        public void UpdateUser(string ipAddress)
         {
-            
-            User user = users.Find(delegate(User e)
-                {
-                    if (e.IPAddress == ipAddress)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                });
-
-            if (user != null)
+            if (users.ContainsKey(ipAddress))
             {
-                user.Expiration = DateTime.Now.AddMinutes(5);
+                users[ipAddress] = DateTime.Now.AddMinutes(5);
             }
         }
 
-    }
-
-    [Serializable()]
-    class User
-    {
-        public User(string ipAddress, DateTime expiration)
+        public void MergeUserList(UserList other)
         {
-            this.IPAddress = ipAddress;
-            this.Expiration = expiration;
+            foreach (var dateTime in other.users)
+            {
+                if (users.ContainsKey(dateTime.Key))
+                {
+                    users[dateTime.Key] = DateTime.Now.AddMinutes(5);
+                }
+                else
+                {
+                    users.Remove(dateTime.Key);
+                }
+            }
         }
 
-        public string IPAddress { get; set; }
-
-        public DateTime Expiration { get; set; }
     }
 }
