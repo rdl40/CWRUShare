@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,6 +19,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections;
 using CWRUNet;
+using Lidgren.Network;
 
 namespace CWRUShare
 {
@@ -35,6 +37,8 @@ namespace CWRUShare
             InitializeComponent();
 
             FolderView.SetSpecialFolderAsRoot(LogicNP.FolderViewControl.SpecialFolders.DRIVES);
+
+            ConnectionManager.Listen(new SendOrPostCallback(Listener));
         }
 
         private void FolderView_Loaded(object sender, RoutedEventArgs e)
@@ -53,7 +57,7 @@ namespace CWRUShare
                 }
             }
 
-            ConnectionManager.RegisterUser();
+            //ConnectionManager.RegisterUser();
         }
 
         private void recurseDirectories(int parentNode, FOVTreeNode currentNode, ShareManager manager)
@@ -216,6 +220,18 @@ namespace CWRUShare
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            //ConnectionManager.ResolveUsers();
+            ConnectionManager.Send();
+        }
+
+        public static void Listener(object peer)
+        {
+            //var msg = ((NetServer) peer).ReadMessage();
+            Console.Write("AIDSMNAS");
         }
 
 

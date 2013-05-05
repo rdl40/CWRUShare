@@ -1,45 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.PeerToPeer;
+using System.Threading;
+using Lidgren.Network;
 
 namespace CWRUNet
 {
     public static class ConnectionManager
     {
+        private static NetServer server;
+        private static NetPeerConfiguration config;
 
-        public static void RegisterUser()
+        static ConnectionManager()
         {
-            PeerName name = new PeerName("eecs441", PeerNameType.Unsecured);
-            PeerNameRegistration registration = new PeerNameRegistration();
+            config = new NetPeerConfiguration("Hello");
+            config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
+            config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
+            config.Port = 14242;
 
-            registration.PeerName = name;
-            registration.Port = 6011;
-            registration.Cloud = Cloud.Global;
-            registration.Comment = SettingsManager.getComment();
+            server = new NetServer(config);
+            server.Start();
+        }
+        
+        public static void Listen(SendOrPostCallback listener)
+        {
+            server.RegisterReceivedCallback(listener);
         }
 
-        public static void ResolveUsers()
+        public static void Send()
         {
-            PeerNameResolver resolver = new PeerNameResolver();
-            PeerName name = new PeerName("eecs441");
-
-            PeerNameRecordCollection results = resolver.Resolve(name);
-
-            foreach (PeerNameRecord x in results)
-            {
-                Console.WriteLine(x.PeerName);
-            }
-
-            //do some stuff
-
+            server.DiscoverLocalPeers(14242);
         }
-
-
-
-
-
     }
 }
