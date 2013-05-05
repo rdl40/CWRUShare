@@ -62,79 +62,6 @@
     <Compile Include="ConnectionManager.cs" />
     <Compile Include="DirectoryItem.cs" />
     <Compile Include="FileManager.cs" />
-    <Compile Include="Lidgren\Encryption\INetEncryption.cs" />
-    <Compile Include="Lidgren\Encryption\NetAESEncryption.cs" />
-    <Compile Include="Lidgren\Encryption\NetBlockEncryptionBase.cs" />
-    <Compile Include="Lidgren\Encryption\NetDESEncryption.cs" />
-    <Compile Include="Lidgren\Encryption\NetRC2Encryption.cs" />
-    <Compile Include="Lidgren\Encryption\NetTripleDESEncryption.cs" />
-    <Compile Include="Lidgren\Encryption\NetXorEncryption.cs" />
-    <Compile Include="Lidgren\Encryption\NetXteaEncryption.cs" />
-    <Compile Include="Lidgren\NamespaceDoc.cs" />
-    <Compile Include="Lidgren\NetBigInteger.cs" />
-    <Compile Include="Lidgren\NetBitVector.cs" />
-    <Compile Include="Lidgren\NetBitWriter.cs" />
-    <Compile Include="Lidgren\NetBuffer.cs" />
-    <Compile Include="Lidgren\NetBuffer.Peek.cs" />
-    <Compile Include="Lidgren\NetBuffer.Read.cs" />
-    <Compile Include="Lidgren\NetBuffer.Read.Reflection.cs" />
-    <Compile Include="Lidgren\NetBuffer.Write.cs" />
-    <Compile Include="Lidgren\NetBuffer.Write.Reflection.cs" />
-    <Compile Include="Lidgren\NetClient.cs" />
-    <Compile Include="Lidgren\NetConnection.cs" />
-    <Compile Include="Lidgren\NetConnection.Handshake.cs" />
-    <Compile Include="Lidgren\NetConnection.Latency.cs" />
-    <Compile Include="Lidgren\NetConnection.MTU.cs" />
-    <Compile Include="Lidgren\NetConnectionStatistics.cs" />
-    <Compile Include="Lidgren\NetConnectionStatus.cs" />
-    <Compile Include="Lidgren\NetConstants.cs" />
-    <Compile Include="Lidgren\NetDeliveryMethod.cs" />
-    <Compile Include="Lidgren\NetException.cs" />
-    <Compile Include="Lidgren\NetFragmentationHelper.cs" />
-    <Compile Include="Lidgren\NetFragmentationInfo.cs" />
-    <Compile Include="Lidgren\NetIncomingMessage.cs" />
-    <Compile Include="Lidgren\NetIncomingMessage.Peek.cs" />
-    <Compile Include="Lidgren\NetIncomingMessage.Read.cs" />
-    <Compile Include="Lidgren\NetIncomingMessage.Read.Reflection.cs" />
-    <Compile Include="Lidgren\NetIncomingMessage.Write.cs" />
-    <Compile Include="Lidgren\NetIncomingMessageType.cs" />
-    <Compile Include="Lidgren\NetMessageType.cs" />
-    <Compile Include="Lidgren\NetNatIntroduction.cs" />
-    <Compile Include="Lidgren\NetOutgoingMessage.cs" />
-    <Compile Include="Lidgren\NetOutgoingMessage.Write.cs" />
-    <Compile Include="Lidgren\NetOutgoingMessage.Write.Reflection.cs" />
-    <Compile Include="Lidgren\NetPeer.cs" />
-    <Compile Include="Lidgren\NetPeer.Discovery.cs" />
-    <Compile Include="Lidgren\NetPeer.Fragmentation.cs" />
-    <Compile Include="Lidgren\NetPeer.Internal.cs" />
-    <Compile Include="Lidgren\NetPeer.LatencySimulation.cs" />
-    <Compile Include="Lidgren\NetPeer.Logging.cs" />
-    <Compile Include="Lidgren\NetPeer.MessagePools.cs" />
-    <Compile Include="Lidgren\NetPeer.Send.cs" />
-    <Compile Include="Lidgren\NetPeerConfiguration.cs" />
-    <Compile Include="Lidgren\NetPeerStatistics.cs" />
-    <Compile Include="Lidgren\NetPeerStatus.cs" />
-    <Compile Include="Lidgren\NetQueue.cs" />
-    <Compile Include="Lidgren\NetRandom.cs" />
-    <Compile Include="Lidgren\NetReceiverChannelBase.cs" />
-    <Compile Include="Lidgren\NetReliableOrderedReceiver.cs" />
-    <Compile Include="Lidgren\NetReliableSenderChannel.cs" />
-    <Compile Include="Lidgren\NetReliableSequencedReceiver.cs" />
-    <Compile Include="Lidgren\NetReliableUnorderedReceiver.cs" />
-    <Compile Include="Lidgren\NetSenderChannelBase.cs" />
-    <Compile Include="Lidgren\NetSendResult.cs" />
-    <Compile Include="Lidgren\NetServer.cs" />
-    <Compile Include="Lidgren\NetSRP.cs" />
-    <Compile Include="Lidgren\NetStoredReliableMessage.cs" />
-    <Compile Include="Lidgren\NetTime.cs" />
-    <Compile Include="Lidgren\NetTuple.cs" />
-    <Compile Include="Lidgren\NetUnreliableSenderChannel.cs" />
-    <Compile Include="Lidgren\NetUnreliableSequencedReceiver.cs" />
-    <Compile Include="Lidgren\NetUnreliableUnorderedReceiver.cs" />
-    <Compile Include="Lidgren\NetUPnP.cs" />
-    <Compile Include="Lidgren\NetUtility.cs" />
-    <Compile Include="Lidgren\Properties\AssemblyInfo.cs" />
-    <Compile Include="Lidgren\SenderChannelBase.cs" />
     <Compile Include="SettingsManager.cs" />
     <Compile Include="ShareManager.cs" />
     <Page Include="MainWindow.xaml">
@@ -169,8 +96,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="Lidgren\obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
-    <None Include="Lidgren\obj\Debug\Lidgren.Network.csprojResolveAssemblyReference.cache" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -189,25 +114,7 @@
       <Name>Lidgren.Network</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Lidgren\bin\Debug\Lidgren.Network.dll" />
-    <Content Include="Lidgren\bin\Debug\Lidgren.Network.pdb" />
-    <Resource Include="Lidgren\bin\Debug\Lidgren.Network.XML" />
-    <Resource Include="Lidgren\Documentation\ChangedFromV2.txt" />
-    <Content Include="Lidgren\Documentation\Discovery.html" />
-    <Resource Include="Lidgren\Documentation\Improvements.txt" />
-    <Resource Include="Lidgren\Documentation\PacketLayout.txt" />
-    <Content Include="Lidgren\Documentation\SimulatingBadNetwork.html" />
-    <Resource Include="Lidgren\Documentation\TODO.txt" />
-    <Content Include="Lidgren\Documentation\Tutorial.html" />
-    <Content Include="Lidgren\Lidgren.Network.csproj" />
-    <Resource Include="Lidgren\obj\Debug\Lidgren.Network.csproj.FileListAbsolute.txt" />
-    <Content Include="Lidgren\obj\Debug\Lidgren.Network.dll" />
-    <Content Include="Lidgren\obj\Debug\Lidgren.Network.pdb" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Lidgren\obj\Debug\TempPE\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
