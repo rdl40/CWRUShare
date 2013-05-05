@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.PeerToPeer;
 using System.Threading;
+using CWRUShare;
 using Lidgren.Network;
 
 namespace CWRUNet
@@ -17,7 +18,7 @@ namespace CWRUNet
 
         static ConnectionManager()
         {
-            config = new NetPeerConfiguration("Hello");
+            config = new NetPeerConfiguration("CWRUShare");
             config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
             config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
             config.Port = 14242;
@@ -33,7 +34,20 @@ namespace CWRUNet
 
         public static void Send()
         {
-            server.DiscoverLocalPeers(14242);
+            for(int x = 0; x <= 255; x++)
+            {
+                 for(int y = 1; y <= 255; y++)
+                 {
+                     server.DiscoverKnownPeer(new IPEndPoint(IPAddress.Parse(String.Format("129.22.{0}.{1}", x, y)), 14242));
+                     Console.WriteLine(String.Format("129.22.{0}.{1}", x, y));
+                     Thread.Sleep(1);
+                 }
+            }
+            
         }
+
+
+
+
     }
 }

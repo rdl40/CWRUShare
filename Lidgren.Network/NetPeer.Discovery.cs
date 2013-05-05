@@ -18,11 +18,11 @@ namespace Lidgren.Network
         /// <summary>
         /// Emit a discovery signal to all hosts within the scope of broadcastAddress
         /// </summary>
-        public void DiscoverPeers(int serverPort, IPEndPoint broadcastAddress)
+        public void DiscoverPeers(IPEndPoint broadcastAddress)
         {
             NetOutgoingMessage om = CreateMessage(0);
             om.m_messageType = NetMessageType.Discovery;
-            m_unsentUnconnectedMessages.Enqueue(new NetTuple<IPEndPoint, NetOutgoingMessage>(new IPEndPoint(IPAddress.Broadcast, serverPort), om));
+            m_unsentUnconnectedMessages.Enqueue(new NetTuple<IPEndPoint, NetOutgoingMessage>(broadcastAddress, om));
         }
 
 		/// <summary>

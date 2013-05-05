@@ -12,71 +12,31 @@ namespace CWRUShare
     [Serializable()]
     public class DirectoryItem : ISerializable
     {
-
-        private string name;
-        private int size;
-        private int icon;
-
         public DirectoryItem()
         {
-            name = "";
-            size = 0;
+            Name = "";
+            Size = 0;
         }
 
-        public string Name
-        {
-            get
-            {
-                return name;
-            }
+        public string Name { get; set; }
 
-            set
-            {
-                name = value;
-            }
-        }
+        public int Size { get; set; }
 
-
-        public int Size
-        {
-            get
-            {
-                return size;
-            }
-
-            set
-            {
-                size = value;
-            }
-
-        }
-
-        public int Icon
-        {
-            get
-            {
-                return icon;
-            }
-
-            set
-            {
-                icon = value;
-            }
-        }
+        public int Icon { get; set; }
 
 
         public DirectoryItem(SerializationInfo info, StreamingContext context)
         {
-            name = (string) info.GetValue("Name", typeof (string));
-            size = (int) info.GetValue("Size", typeof (int));
-            icon = (int) info.GetValue("Icon", typeof (int));
+            Name = (string) info.GetValue("Name", typeof (string));
+            Size = (int) info.GetValue("Size", typeof (int));
+            Icon = (int) info.GetValue("Icon", typeof (int));
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("Name", name);
-            info.AddValue("Size", size);
-            info.AddValue("Icon", icon);
+            info.AddValue("Name", Name);
+            info.AddValue("Size", Size);
+            info.AddValue("Icon", Icon);
         }
     }
 

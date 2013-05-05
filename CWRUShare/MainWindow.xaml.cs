@@ -20,6 +20,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections;
 using CWRUNet;
 using Lidgren.Network;
+using Task = System.Threading.Tasks.Task;
 
 namespace CWRUShare
 {
@@ -225,13 +226,22 @@ namespace CWRUShare
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
             //ConnectionManager.ResolveUsers();
-            ConnectionManager.Send();
+            Sender();
         }
 
         public static void Listener(object peer)
         {
             //var msg = ((NetServer) peer).ReadMessage();
             Console.Write("AIDSMNAS");
+        }
+
+        public async static void Sender()
+        {
+            var tasker = Task.Factory.StartNew(ConnectionManager.Send);
+
+            await tasker;
+
+            Console.WriteLine("oooh yaaaa");
         }
 
 
