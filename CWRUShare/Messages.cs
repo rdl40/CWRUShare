@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CWRUShare
 {
 
-    enum Message {Ping, RequestUserList, RequestFileList, RequestFiles, Leaving}
+    enum Message {Ping, PingReply, RequestUserList, RecieveUserList, RequestFileList, RecieveFileList, RequestFiles, RecieveFile, Leaving}
 
     [Serializable()]
     internal class Messages
@@ -15,5 +17,21 @@ namespace CWRUShare
         public Message MessageType { get; set; }
 
         public object Data { get; set; }
+
+        public byte[] ToByteArray()
+        {
+            BinaryFormatter binaryForm = new BinaryFormatter();
+            MemoryStream memoryStream = new MemoryStream();
+            binaryForm.Serialize(memoryStream, this);
+            return memoryStream.ToArray();
+        }
+
+        public static Messages FromByteArray(byte[] data)
+        {
+            BinaryFormatter binaryForm = new BinaryFormatter();
+            MemoryStream memoryStream = new MemoryStream();
+            memoryStream.Write(data, 0, data.Length);
+            return (Messages) binaryForm.Deserialize(memoryStream);
+        }
     }
 }

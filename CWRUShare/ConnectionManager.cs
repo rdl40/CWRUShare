@@ -34,21 +34,64 @@ namespace CWRUNet
 
         public static void Send()
         {
-            for(int x = 0; x <= 255; x++)
-            {
-                 for(int y = 1; y <= 254; y++)
-                 {
-                     server.DiscoverKnownPeer(new IPEndPoint(IPAddress.Parse(String.Format("129.22.{0}.{1}", x, y)), 14242));
-                     Console.WriteLine(String.Format("129.22.{0}.{1}", x, y));
-                     Thread.Sleep(1);
-                 }
-            }
+            server.DiscoverKnownPeer(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 14242));
+            //for(int x = 0; x <= 255; x++)
+            //{
+            //     for(int y = 1; y <= 254; y++)
+            //     {
+            //         server.DiscoverKnownPeer(new IPEndPoint(IPAddress.Parse(String.Format("129.22.{0}.{1}", x, y)), 14242));
+            //         Console.WriteLine(String.Format("129.22.{0}.{1}", x, y));
+            //         Thread.Sleep(1);
+            //     }
+            //}
         }
 
         //public static UserList 
 
 
+        internal static void Ping(IPEndPoint location)
+        {
+            server.SendMessage()
+        }
 
+        internal static void ReplyToPing(NetIncomingMessage message)
+        {
+            server.SendMessage(server.CreateMessage("CWRUNet!"), message.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+        }
 
+        internal static void SendFileList(NetIncomingMessage message)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static void RecieveFileList(NetIncomingMessage message)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static void RecieveUserList(NetIncomingMessage message)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static void SendFiles(NetIncomingMessage message)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static void RecieveFiles(NetIncomingMessage message)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static void PingReplyRecieved(NetIncomingMessage message)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static void SendUserList(NetIncomingMessage message)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

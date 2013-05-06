@@ -70,19 +70,5 @@ namespace CWRUShare
         {
             return icons[index];
         }
-
-        //public ShareManager(SerializationInfo info, StreamingContext context)
-        //{
-        //    icons = (Dictionary<int, System.Drawing.Icon>) info.GetValue("Icons", typeof (Dictionary<int, System.Drawing.Icon>));
-        //    data = (Dictionary<int, DirectoryItem>) info.GetValue("Data", typeof(Dictionary<int, DirectoryItem>));
-        //    instructions = (string) info.GetValue("Instructions", typeof (string));
-        //}
-
-        //public void GetObjectData(SerializationInfo info, StreamingContext context)
-        //{
-        //    info.AddValue("Icons", icons);
-        //    info.AddValue("Data", data);
-        //    info.AddValue("Instructions", instructions);
-        //}
     }
 }

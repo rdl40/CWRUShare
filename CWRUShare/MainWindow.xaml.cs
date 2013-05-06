@@ -237,27 +237,42 @@ namespace CWRUShare
         public static void Listener(object peer)
         {
 
-            Console.WriteLine("Discovery request recieved");
+            Console.WriteLine("Recieved message");
             var msg = ((NetServer) peer).ReadMessage();
 
-            BinaryFormatter binaryForm = new BinaryFormatter();
-            MemoryStream memoryStream = new MemoryStream();
-
-            memoryStream.Write(msg.Data, 0, msg.Data.Length);
-            
-            Messages message = (Messages) binaryForm.Deserialize(memoryStream);
+            Messages message = Messages.FromByteArray(msg.Data);
 
             switch (message.MessageType)
             {
-                case Message.Leaving:
-                    break;
                 case Message.Ping:
+                    ConnectionManager.ReplyToPing(msg);
+                    break;
+                case Message.PingReply:
+                    ConnectionManager.PingReplyRecieved(msg);
                     break;
                 case Message.RequestFileList:
+                    ConnectionManager.SendFileList(msg);
+                    break;
+                case Message.RecieveFileList:
+                    ConnectionManager.RecieveFileList(msg);
                     break;
                 case Message.RequestUserList:
+                    ConnectionManager.SendUserList(msg);
+                    break;
+                case Message.RecieveUserList:
+                    ConnectionManager.RecieveUserList(msg);
                     break;
                 case Message.RequestFiles:
+                    ConnectionManager.SendFiles(msg);
+                    break;
+                case Message.RecieveFile:
+                    ConnectionManager.RecieveFiles(msg);
+                    break;
+                case Message.Leaving:
+                    break;
+
+                default:
+                    Console.WriteLine(message.MessageType.ToString());
                     break;
             }
         }

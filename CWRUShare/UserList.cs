@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,42 +13,42 @@ namespace CWRUShare
     [Serializable()]
     public class UserList
     {
-        protected Dictionary<string, DateTime> users;
-        private List<String> activePeers;
+        protected Dictionary<string, DateTime> Users;
+        private List<String> _activePeers;
 
         public void AddUser(string ipAddress)
         {
-            users.Add(ipAddress, DateTime.Now.AddMinutes(5));
+            Users.Add(ipAddress, DateTime.Now.AddMinutes(5));
         }
 
         public void UpdateUser(string ipAddress)
         {
-            if (users.ContainsKey(ipAddress))
+            if (Users.ContainsKey(ipAddress))
             {
-                users[ipAddress] = DateTime.Now.AddMinutes(5);
+                Users[ipAddress] = DateTime.Now.AddMinutes(5);
             }
         }
 
         public void MergeUserList(UserList other)
         {
-            foreach (var dateTime in other.users)
+            foreach (var dateTime in other.Users)
             {
-                if (users.ContainsKey(dateTime.Key))
+                if (Users.ContainsKey(dateTime.Key))
                 {
-                    users[dateTime.Key] = dateTime.Value;
+                    Users[dateTime.Key] = dateTime.Value;
                 }
             }
         }
 
         private void PopulateActivePeers()
         {
-            activePeers = new List<string>();
+            _activePeers = new List<string>();
 
-            foreach (var user in users)
+            foreach (var user in Users)
             {
                 if (DateTime.Compare(user.Value, DateTime.Now) > 0)
                 {
-                    activePeers.Add(user.Key);
+                    _activePeers.Add(user.Key);
                 }
             }
         }
@@ -55,14 +57,30 @@ namespace CWRUShare
         {
             PopulateActivePeers();
 
-            if (activePeers.Count >= 1)
+            if (_activePeers.Count >= 1)
             {
-                return new IPEndPoint((new Random().Next(activePeers.Count)), 14242);
+                return new IPEndPoint((new Random().Next(_activePeers.Count)), 14242);
             }
             else
             {
                 return new IPEndPoint(IPAddress.Parse("127.0.0.1"), 14242);
             }
+        }
+
+        public byte[] ToByteArray()
+        {
+            BinaryFormatter binaryForm = new BinaryFormatter();
+            MemoryStream memoryStream = new MemoryStream();
+            binaryForm.Serialize(memoryStream, this);
+            return memoryStream.ToArray();
+        }
+
+        public static UserList FromByteArray(byte[] data)
+        {
+            BinaryFormatter binaryForm = new BinaryFormatter();
+            MemoryStream memoryStream = new MemoryStream();
+            memoryStream.Write(data, 0, data.Length);
+            return (UserList)binaryForm.Deserialize(memoryStream);
         }
 
     }
