@@ -36,7 +36,7 @@ namespace CWRUNet
         {
             for(int x = 0; x <= 255; x++)
             {
-                 for(int y = 1; y <= 255; y++)
+                 for(int y = 1; y <= 254; y++)
                  {
                      server.DiscoverKnownPeer(new IPEndPoint(IPAddress.Parse(String.Format("129.22.{0}.{1}", x, y)), 14242));
                      Console.WriteLine(String.Format("129.22.{0}.{1}", x, y));

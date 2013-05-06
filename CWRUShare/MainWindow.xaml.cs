@@ -236,13 +236,15 @@ namespace CWRUShare
 
         public static void Listener(object peer)
         {
+
+            Console.WriteLine("Discovery request recieved");
             var msg = ((NetServer) peer).ReadMessage();
 
             BinaryFormatter binaryForm = new BinaryFormatter();
             MemoryStream memoryStream = new MemoryStream();
 
             memoryStream.Write(msg.Data, 0, msg.Data.Length);
-
+            
             Messages message = (Messages) binaryForm.Deserialize(memoryStream);
 
             switch (message.MessageType)
