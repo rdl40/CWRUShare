@@ -51,7 +51,7 @@ namespace CWRUNet
 
         internal static void Ping(IPEndPoint location)
         {
-            server.SendMessage()
+            //server.SendMessage(server.CreateMessage("CWRUNet!"), new NetConnection()
         }
 
         internal static void ReplyToPing(NetIncomingMessage message)
