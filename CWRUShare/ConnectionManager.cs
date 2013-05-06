@@ -43,8 +43,9 @@ namespace CWRUNet
                      Thread.Sleep(1);
                  }
             }
-            
         }
+
+        //public static UserList 
 
 
 

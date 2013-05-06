@@ -34,6 +34,8 @@ namespace CWRUShare
 
         private FOVTreeNode supertemp;
 
+        private UserList users;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -234,8 +236,28 @@ namespace CWRUShare
 
         public static void Listener(object peer)
         {
-            //var msg = ((NetServer) peer).ReadMessage();
-            Console.Write("AIDSMNAS");
+            var msg = ((NetServer) peer).ReadMessage();
+
+            BinaryFormatter binaryForm = new BinaryFormatter();
+            MemoryStream memoryStream = new MemoryStream();
+
+            memoryStream.Write(msg.Data, 0, msg.Data.Length);
+
+            Messages message = (Messages) binaryForm.Deserialize(memoryStream);
+
+            switch (message.MessageType)
+            {
+                case Message.Leaving:
+                    break;
+                case Message.Ping:
+                    break;
+                case Message.RequestFileList:
+                    break;
+                case Message.RequestUserList:
+                    break;
+                case Message.RequestFiles:
+                    break;
+            }
         }
 
         public async static void Sender()

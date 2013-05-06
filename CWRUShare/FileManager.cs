@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CWRUNet
+namespace CWRUShare
 {
-    class FileManager
+
+    [Serializable]
+    static class FileManager
     {
+        
     }
 }

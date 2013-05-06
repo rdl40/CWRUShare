@@ -65,9 +65,8 @@
     </ApplicationDefinition>
     <Compile Include="ConnectionManager.cs" />
     <Compile Include="DirectoryItem.cs" />
-    <Compile Include="Exchanges.cs" />
     <Compile Include="FileManager.cs" />
-    <Compile Include="IExchanges.cs" />
+    <Compile Include="Messages.cs" />
     <Compile Include="SettingsManager.cs" />
     <Compile Include="ShareManager.cs" />
     <Compile Include="UserList.cs" />
