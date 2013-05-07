@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace CWRUShare
 {
 
-    enum Message {Ping, PingReply, RequestUserList, RecieveUserList, RequestFileList, RecieveFileList, RequestFiles, RecieveFile, Leaving}
+    enum Message {DiscoveryReply, Ping, PingReply, RequestUserList, RecieveUserList, RequestFileList, RecieveFileList, RequestFiles, RecieveFile, Leaving}
 
     [Serializable()]
     internal class Messages

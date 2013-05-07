@@ -17,12 +17,17 @@ namespace CWRUNet
         private static NetPeerConfiguration config;
         private static UserList userList;
 
+        private static bool isConnected;
+
         static ConnectionManager()
         {
             config = new NetPeerConfiguration("CWRUShare");
             config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
             config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
+            config.EnableMessageType(NetIncomingMessageType.Data);
+            config.EnableMessageType(NetIncomingMessageType.UnconnectedData);
             config.Port = 14242;
+            isConnected = false;
 
             server = new NetServer(config);
             server.Start();
@@ -32,6 +37,11 @@ namespace CWRUNet
         {
             userList = reference;
         }
+
+        public static UserList ExportUserList()
+        {
+            return userList;
+        }
         
         public static void Listen(SendOrPostCallback listener)
         {
@@ -40,24 +50,27 @@ namespace CWRUNet
 
         public static void Send()
         {
-
             server.DiscoverKnownPeer(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 14242));
-            //for(int x = 0; x <= 255; x++)
-            //{
-            //     for(int y = 1; y <= 254; y++)
-            //     {
-            //         server.DiscoverKnownPeer(new IPEndPoint(IPAddress.Parse(String.Format("129.22.{0}.{1}", x, y)), 14242));
-            //         Console.WriteLine(String.Format("129.22.{0}.{1}", x, y));
-            //         Thread.Sleep(1);
-            //     }
-            //}
+        }
+
+        public static void ExtendedDiscovery()
+        {
+            for(int x = 50; x <= 70; x++)
+            {
+                 for(int y = 0; y <= 254; y++)
+                 {
+                     server.DiscoverKnownPeer(new IPEndPoint(IPAddress.Parse(String.Format("129.22.{0}.{1}", x, y)), 14242));
+                 }
+            }
         }
 
         public static void Discover()
         {
             server.DiscoverLocalPeers(14242);
 
-            foreach (var endpoint in userList.GetActivePeers())
+            List<IPEndPoint> temp = userList.GetActivePeers();
+
+            foreach (var endpoint in temp)
             {
                 server.DiscoverKnownPeer(endpoint);
             }
@@ -65,52 +78,105 @@ namespace CWRUNet
 
         internal static void Ping(IPEndPoint location)
         {
-            //server.SendMessage(server.CreateMessage("CWRUNet!"), new NetConnection()
+            Messages message = new Messages();
+            message.MessageType = Message.Ping;
+
+            NetOutgoingMessage msg = server.CreateMessage();
+            msg.Data = message.ToByteArray();
+            server.SendUnconnectedMessage(msg, location);
         }
 
-        internal static void ReplyToPing(NetIncomingMessage message)
+        internal static void ReplyToPing(NetIncomingMessage msg)
         {
-            server.SendMessage(server.CreateMessage("CWRUNet!"), message.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            Messages message = new Messages();
+            message.MessageType = Message.Ping;
+
+            NetOutgoingMessage outgoingMessage = server.CreateMessage();
+            msg.Data = message.ToByteArray();
+            server.SendMessage(outgoingMessage, msg.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
-        internal static void SendFileList(NetIncomingMessage message)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal static void RecieveFileList(NetIncomingMessage message)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal static void RecieveUserList(NetIncomingMessage message)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal static void SendFiles(NetIncomingMessage message)
+        internal static void SendFileList(NetIncomingMessage msg)
         {
             throw new NotImplementedException();
         }
 
-        internal static void RecieveFiles(NetIncomingMessage message)
+        internal static void RecieveFileList(NetIncomingMessage msg)
         {
             throw new NotImplementedException();
         }
 
-        internal static void PingReplyRecieved(NetIncomingMessage message)
+        internal static void RecieveUserList(NetIncomingMessage msg)
+        {
+            Messages message = Messages.FromByteArray(msg.Data);
+            userList.MergeUserList((UserList) message.Data);
+        }
+
+        internal static void SendFiles(NetIncomingMessage msg)
         {
             throw new NotImplementedException();
         }
 
-        internal static void SendUserList(NetIncomingMessage message)
+        internal static void RecieveFiles(NetIncomingMessage msg)
         {
             throw new NotImplementedException();
+        }
+
+        internal static void PingReplyRecieved(NetIncomingMessage msg)
+        {
+            userList.UpdateUser(msg.SenderConnection.RemoteEndPoint.Address.ToString());
+        }
+
+        internal static void SendUserList(NetIncomingMessage msg)
+        {
+            Messages message = new Messages();
+            message.MessageType = Message.RecieveUserList;
+            message.Data = userList;
+            NetOutgoingMessage outgoingMessage = server.CreateMessage();
+            msg.Data = message.ToByteArray();
+            server.SendMessage(outgoingMessage, msg.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
         public static bool IsConnected()
         {
-            return false;
+            return isConnected;
         }
+
+        internal static void ReplyToDiscovery(NetIncomingMessage msg)
+        {
+            Messages message = new Messages();
+            message.MessageType = Message.DiscoveryReply;
+            NetOutgoingMessage outgoingMessage = server.CreateMessage();
+            msg.Data = message.ToByteArray();
+            server.SendMessage(outgoingMessage, msg.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        internal static void RequestUserList(IPEndPoint peer)
+        {
+            NetOutgoingMessage msg = server.CreateMessage();
+            Messages message = new Messages();
+            message.MessageType = Message.RequestUserList;
+            msg.Data = message.ToByteArray();
+            server.SendUnconnectedMessage(msg, peer);
+        }
+
+        internal static void RecievedDiscoveryReply(NetIncomingMessage msg)
+        {
+            userList.AddUser(msg.SenderEndPoint.Address.ToString());
+            isConnected = true;
+            RequestUserList(msg.SenderEndPoint);
+        }
+
+        public static List<string> GetUserList()
+        {
+            List<string> toBeReturned = new List<string>();
+            foreach (var user in userList.GetActivePeers())
+            {
+                toBeReturned.Add(user.Address.ToString());
+            }
+
+            return toBeReturned;
+        }
+
     }
 }

@@ -16,6 +16,12 @@ namespace CWRUShare
         protected Dictionary<string, DateTime> Users;
         private List<String> _activePeers;
 
+        public UserList()
+        {
+            Users = new Dictionary<string, DateTime>();
+            _activePeers = new List<string>();
+        }
+
         public void AddUser(string ipAddress)
         {
             Users.Add(ipAddress, DateTime.Now.AddMinutes(5));

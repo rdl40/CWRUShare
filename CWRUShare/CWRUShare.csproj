@@ -35,6 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="logicnp.shellobjects.wpf, Version=13.0.0.0, Culture=neutral, PublicKeyToken=ff6f27194af4af75, processorArchitecture=MSIL" />
     <Reference Include="Ookii.Dialogs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0c15020868fd6249, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Visual Studio 2012\Projects\CWRUShare\CWRUShare\Ookii.Dialogs.dll</HintPath>

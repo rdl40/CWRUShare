@@ -17,6 +17,7 @@ using System.Windows.Shapes;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections;
+using System.Windows.Threading;
 using Lidgren.Network;
 using CWRUNet;
 
@@ -36,6 +37,7 @@ namespace CWRUShare
 
         private UserList users;
         private string downloadDirectory;
+        private DispatcherTimer discoveryTimer;
 
         public MainWindow()
         {
@@ -45,6 +47,7 @@ namespace CWRUShare
             // Get the c:\ directory.
             System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(downloadDirectory);
 
+            users = new UserList();
 
             // For each file in the c:\ directory, create a ListViewItem 
             // and set the icon to the icon extracted from the file. 
@@ -53,13 +56,7 @@ namespace CWRUShare
                 fileView.Items.Add(file.Name);
             }
 
-            peerView.Items.Add("192.168.1.1");
-            peerView.Items.Add("192.168.1.1");
-            peerView.Items.Add("192.168.1.1");
-            peerView.Items.Add("192.168.1.1");
-
-
-            ConnectionManager.Listen(new SendOrPostCallback(Listener));
+            ConnectionManager.SetUserList(users);
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -72,10 +69,21 @@ namespace CWRUShare
 
         }
 
-        private void Button_Click_3(object sender, RoutedEventArgs e)
+        private void UpdatePeerView()
         {
-            //ConnectionManager.ResolveUsers();
-            Sender();
+            peerView.Items.Clear();
+            foreach (var user in ConnectionManager.GetUserList())
+            {
+                peerView.Items.Add(user);
+            }
+
+        }
+
+        private void DiscoveryTimerTick(object sender, EventArgs e)
+        {
+            Console.WriteLine("starting deep discovery");
+            ConnectionManager.ExtendedDiscovery();
+            discoveryTimer.Stop();
         }
 
         public static void Listener(object peer)
@@ -84,15 +92,21 @@ namespace CWRUShare
             Console.WriteLine("Recieved message");
             var msg = ((NetServer) peer).ReadMessage();
 
-            Messages message = Messages.FromByteArray(msg.Data);
-
             if (msg.MessageType != NetIncomingMessageType.Data)
             {
-                
+                if (msg.MessageType == NetIncomingMessageType.DiscoveryRequest)
+                {
+                    ConnectionManager.ReplyToDiscovery(msg);
+                }
             }
+
+            Messages message = Messages.FromByteArray(msg.Data);
 
             switch (message.MessageType)
             {
+                case Message.DiscoveryReply:
+                    ConnectionManager.RecievedDiscoveryReply(msg);
+                    break;
                 case Message.Ping:
                     ConnectionManager.ReplyToPing(msg);
                     break;
@@ -138,6 +152,16 @@ namespace CWRUShare
         private void viewFilesButton_Click(object sender, RoutedEventArgs e)
         {
             Process.Start(downloadDirectory);
+        }
+
+        private void Window_Loaded_1(object sender, RoutedEventArgs e)
+        {
+            ConnectionManager.Discover();
+            discoveryTimer = new DispatcherTimer();
+            discoveryTimer.Interval = TimeSpan.FromSeconds(10);
+            discoveryTimer.Tick += DiscoveryTimerTick;
+            discoveryTimer.Start();
+            Console.WriteLine("Timer started");
         }
 
     }
