@@ -60,16 +60,6 @@ namespace CWRUShare
 
             fileList.PopulateFileList(downloadDirectory);
 
-
-            foreach (File file in fileList.GetFileList())
-            {
-                ListViewItem item = new ListViewItem();
-                item.Content = file.Name;
-                item.Tag = file.ID;
-
-                fileView.Items.Add(item);
-            }
-
             thisAddress = (Dns.GetHostEntry(Dns.GetHostName())).AddressList[0];
 
             foreach (IPAddress address in Dns.GetHostEntry(Dns.GetHostName()).AddressList)
@@ -83,6 +73,7 @@ namespace CWRUShare
 
             ConnectionManager.Listen(new SendOrPostCallback(Listener));
             ConnectionManager.SetUserList(users);
+            ConnectionManager.SetThisFileList(fileList);
 
         }
 
@@ -99,8 +90,12 @@ namespace CWRUShare
         private void UpdatePeerView()
         {
             peerView.Items.Clear();
-            foreach (var user in ConnectionManager.GetUserList())
-            {
+            foreach (string user in ConnectionManager.GetUserList())
+            {   
+                if (user.CompareTo(thisAddress.ToString()) == 0)
+                {
+                    continue;
+                }
                 peerView.Items.Add(user);
             }
         }
@@ -159,13 +154,10 @@ namespace CWRUShare
                     break;
                 case Message.RequestFileList:
                     Console.Write("RequestFileList recieved");
-                    ConnectionManager.SendFileList(msg);
+                    ConnectionManager.RequestFileList(msg.SenderEndPoint);
                     break;
                 case Message.RecieveFileList:
-                    if (msg.SenderEndPoint.Equals(fileListRequestSource))
-                    {
-                        ConnectionManager.RecieveFileList(msg);
-                    }
+                    ConnectionManager.RecieveFileList(msg);
                     break;
                 case Message.RequestUserList:
                     Console.Write("RequestUserList recieved");
@@ -202,7 +194,8 @@ namespace CWRUShare
 
         private void viewFilesButton_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(downloadDirectory);
+            //Process.Start(downloadDirectory);
+            ConnectionManager.RequestFileList(new IPEndPoint(IPAddress.Parse((string)peerView.SelectedValue), 14242));
         }
 
         private void Window_Loaded_1(object sender, RoutedEventArgs e)
@@ -219,6 +212,25 @@ namespace CWRUShare
             peerListTimer.Start();
 
             Console.WriteLine("Timer started");
+        }
+
+        private void peerView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            viewFilesButton.IsEnabled = true;
+        }
+
+        private void UpdateFileList()
+        {
+            fileView.Items.Clear();
+
+            foreach (var file in ConnectionManager.GetCurrentFileList())
+            {
+                ListViewItem item = new ListViewItem();
+                item.Content = file.Name;
+                item.Tag = file.ID;
+
+                fileView.Items.Add(item);
+            }
         }
 
     }

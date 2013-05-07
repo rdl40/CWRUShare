@@ -18,6 +18,8 @@ namespace CWRUNet
         private static NetPeerConfiguration config;
         private static UserList userList;
         private static bool isConnected;
+        private static FileList currentListView;
+        private static FileList userFileList;
 
         static ConnectionManager()
         {
@@ -26,11 +28,18 @@ namespace CWRUNet
             config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
             config.EnableMessageType(NetIncomingMessageType.Data);
             config.SetMessageTypeEnabled(NetIncomingMessageType.UnconnectedData, true);
+            currentListView = new FileList();
+
             config.Port = 14242;
             isConnected = false;
 
             server = new NetServer(config);
             server.Start();
+        }
+
+        public static void SetThisFileList(FileList thisList)
+        {
+            userFileList = thisList;
         }
 
         public static void SetUserList(UserList reference)
@@ -99,14 +108,20 @@ namespace CWRUNet
             userList.AddUser(msg.SenderEndPoint.Address.ToString());
         }
 
-        internal static void SendFileList(NetIncomingMessage msg)
+        internal static void RequestFileList(IPEndPoint peer)
         {
-            throw new NotImplementedException();
+            Messages message = new Messages();
+            message.MessageType = Message.RequestFileList;
+            NetOutgoingMessage outgoingMessage = server.CreateMessage();
+            outgoingMessage.Write(message.ToByteArray());
+            NetConnection connection = server.Connect(peer);
+            server.SendMessage(outgoingMessage, connection, NetDeliveryMethod.ReliableOrdered);
         }
 
         internal static void RecieveFileList(NetIncomingMessage msg)
         {
-            throw new NotImplementedException();
+            Messages message = Messages.FromByteArray(msg.Data);
+            currentListView = ((FileList)message.Data);
         }
 
         internal static void RecieveUserList(NetIncomingMessage msg)
@@ -195,6 +210,11 @@ namespace CWRUNet
             }
 
             return toBeReturned;
+        }
+
+        public static List<File> GetCurrentFileList()
+        {
+            return currentListView.GetFileList();
         }
 
     }

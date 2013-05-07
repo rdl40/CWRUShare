@@ -13,10 +13,10 @@
             <RowDefinition Height = "Auto"/>
             <RowDefinition Height = "Auto"/>
         </Grid.RowDefinitions>
-        <ListView x:Name="peerView" HorizontalAlignment="Left" Height="271" Margin="33,0,0,0" VerticalAlignment="Top" Width="127" RenderTransformOrigin="4.302,0.429" Grid.Row="1">
+        <ListView x:Name="peerView" HorizontalAlignment="Left" Height="271" Margin="33,0,0,0" VerticalAlignment="Top" Width="145" RenderTransformOrigin="4.302,0.429" Grid.Row="1" SelectionMode="Single" SelectionChanged="peerView_SelectionChanged">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn HeaderStringFormat="" Width="127" Header="Address"/>
+                    <GridViewColumn HeaderStringFormat="" Width="147" Header="Address"/>
                 </GridView>
             </ListView.View>
         </ListView>
@@ -27,7 +27,7 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <Button x:Name="viewFilesButton" Content="View Files" HorizontalAlignment="Left" VerticalAlignment="Top" Width="124" Click="viewFilesButton_Click" Height="39" Margin="81,0,0,0"/>
+        <Button x:Name="viewFilesButton" Content="View Files" HorizontalAlignment="Left" VerticalAlignment="Top" Width="124" Click="viewFilesButton_Click" Height="39" Margin="81,0,0,0" IsEnabled="False"/>
         <Button x:Name="downloadButton" Content="Download" HorizontalAlignment="Left" Margin="239,0,0,0" VerticalAlignment="Top" Width="109" RenderTransformOrigin="-2.24,-2.4" Height="39"/>
 
         <ShellObjects:SystemIdleTimerWPF HorizontalAlignment="Left" Height="100" Margin="569,111,-237,0" Grid.Row="1" VerticalAlignment="Top" Width="100"/>
