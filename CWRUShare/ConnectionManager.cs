@@ -196,6 +196,8 @@ namespace CWRUNet
                     client.ReceiveFile("hello.txt", BitConverter.ToInt64(buffer, 0));
                 }
             }
+
+            Console.WriteLine("OI!");
         }
 
         internal static void RequestFiles(IPEndPoint peer,  Guid file)

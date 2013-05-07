@@ -262,7 +262,7 @@ namespace CWRUShare
 
         private static void download_DoWork(object sender, DoWorkEventArgs e)
         {
-            ConnectionManager.RecieveFiles((NetIncomingMessage)sender);
+            ConnectionManager.RecieveFiles((NetIncomingMessage)e.Argument);
         }
 
         private static void download_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -272,7 +272,7 @@ namespace CWRUShare
 
         private static void upload_DoWork(object sender, DoWorkEventArgs e)
         {
-            ConnectionManager.SendFiles((NetIncomingMessage)sender);
+            ConnectionManager.SendFiles((NetIncomingMessage)e.Argument);
         }
 
         private static void upload_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
