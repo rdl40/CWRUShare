@@ -53,7 +53,19 @@ namespace CWRUShare
             }
         }
 
-        public IPEndPoint GetActivePeer()
+        public List<IPEndPoint> GetActivePeers()
+        {
+            List<IPEndPoint> toBeReturned = new List<IPEndPoint>();
+
+            foreach (var address in _activePeers)
+            {
+                toBeReturned.Add(new IPEndPoint(IPAddress.Parse(address), 14242));
+            }
+
+            return toBeReturned;
+        }
+
+        public IPEndPoint GetRandomPeer()
         {
             PopulateActivePeers();
 

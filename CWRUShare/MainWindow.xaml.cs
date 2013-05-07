@@ -86,6 +86,11 @@ namespace CWRUShare
 
             Messages message = Messages.FromByteArray(msg.Data);
 
+            if (msg.MessageType != NetIncomingMessageType.Data)
+            {
+                
+            }
+
             switch (message.MessageType)
             {
                 case Message.Ping:

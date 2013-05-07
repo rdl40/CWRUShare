@@ -15,6 +15,7 @@ namespace CWRUNet
     {
         private static NetServer server;
         private static NetPeerConfiguration config;
+        private static UserList userList;
 
         static ConnectionManager()
         {
@@ -26,6 +27,11 @@ namespace CWRUNet
             server = new NetServer(config);
             server.Start();
         }
+
+        public static void SetUserList(UserList reference)
+        {
+            userList = reference;
+        }
         
         public static void Listen(SendOrPostCallback listener)
         {
@@ -34,6 +40,7 @@ namespace CWRUNet
 
         public static void Send()
         {
+
             server.DiscoverKnownPeer(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 14242));
             //for(int x = 0; x <= 255; x++)
             //{
@@ -46,8 +53,15 @@ namespace CWRUNet
             //}
         }
 
-        //public static UserList 
+        public static void Discover()
+        {
+            server.DiscoverLocalPeers(14242);
 
+            foreach (var endpoint in userList.GetActivePeers())
+            {
+                server.DiscoverKnownPeer(endpoint);
+            }
+        }
 
         internal static void Ping(IPEndPoint location)
         {
@@ -92,6 +106,11 @@ namespace CWRUNet
         internal static void SendUserList(NetIncomingMessage message)
         {
             throw new NotImplementedException();
+        }
+
+        public static bool IsConnected()
+        {
+            return false;
         }
     }
 }
