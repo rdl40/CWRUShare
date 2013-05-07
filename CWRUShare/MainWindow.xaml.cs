@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,6 +23,7 @@ using System.Windows.Threading;
 using Lidgren.Network;
 using CWRUNet;
 
+
 namespace CWRUShare
 {
     
@@ -38,6 +41,7 @@ namespace CWRUShare
         private UserList users;
         private string downloadDirectory;
         private DispatcherTimer discoveryTimer;
+        private static IPAddress thisAddress;
 
         public MainWindow()
         {
@@ -48,6 +52,17 @@ namespace CWRUShare
             System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(downloadDirectory);
 
             users = new UserList();
+
+            thisAddress = (Dns.GetHostEntry(Dns.GetHostName())).AddressList[0];
+
+            foreach (IPAddress address in Dns.GetHostEntry(Dns.GetHostName()).AddressList)
+            {
+                if (address.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    thisAddress = address;
+                    break;
+                }
+            }
 
             // For each file in the c:\ directory, create a ListViewItem 
             // and set the icon to the icon extracted from the file. 
@@ -90,9 +105,17 @@ namespace CWRUShare
 
         public static void Listener(object peer)
         {
+            var msg = ((NetServer) peer).ReadMessage();
+
+            if (msg.SenderEndPoint.Address.Equals(thisAddress))
+            {
+                return;
+            }
+            
 
             Console.WriteLine("Recieved message");
-            var msg = ((NetServer) peer).ReadMessage();
+                
+
 
             if (msg.MessageType != NetIncomingMessageType.Data)
             {

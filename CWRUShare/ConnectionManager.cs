@@ -16,7 +16,6 @@ namespace CWRUNet
         private static NetServer server;
         private static NetPeerConfiguration config;
         private static UserList userList;
-
         private static bool isConnected;
 
         static ConnectionManager()
@@ -57,11 +56,14 @@ namespace CWRUNet
         {
             for(int x = 60; x <= 70; x++)
             {
-                 for(int y = 50; y <= 70; y++)
+                 for(int y = 70; y <= 75; y++)
                  {
+                     Console.WriteLine(IPAddress.Parse(String.Format("129.22.{0}.{1}", x, y)));
                      server.DiscoverKnownPeer(new IPEndPoint(IPAddress.Parse(String.Format("129.22.{0}.{1}", x, y)), 14242));
                  }
             }
+
+            Console.WriteLine("deep discovery finished");
         }
 
         public static void Discover()
@@ -148,6 +150,7 @@ namespace CWRUNet
             message.MessageType = Message.DiscoveryReply;
             NetOutgoingMessage outgoingMessage = server.CreateMessage();
             outgoingMessage.Data = message.ToByteArray();
+            Console.WriteLine("AIDS: " + message.ToByteArray().Length);
             server.SendUnconnectedMessage(outgoingMessage, msg.SenderEndPoint);
         }
 
