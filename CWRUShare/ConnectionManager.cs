@@ -166,7 +166,7 @@ namespace CWRUNet
         internal static void SendFiles(NetIncomingMessage msg)
         {
             Messages message = Messages.FromByteArray(msg.Data);
-            Guid id = (Guid)message.Data;
+            Guid id = new Guid((byte[])message.Data);
 
             using (Udt.Socket socket = new Udt.Socket(AddressFamily.InterNetwork, SocketType.Stream))
             using (Udt.StdFileStream fs = new Udt.StdFileStream(userFileList.GetFilePathFromGuid(id), FileMode.Open))
@@ -202,19 +202,19 @@ namespace CWRUNet
 
         internal static void RequestFiles(IPEndPoint peer,  Guid file)
         {
-            NetOutgoingMessage msg = server.CreateMessage();
             Messages message = new Messages();
-            message.Data = file;
             message.MessageType = Message.RequestFiles;
-            msg.Write(message.ToByteArray());
+            message.Data = file.ToByteArray();
+            NetOutgoingMessage outgoingMessage = server.CreateMessage();
+            outgoingMessage.Write(message.ToByteArray());
 
             if (server.GetConnection(peer) != null)
             {
-                server.SendMessage(msg, server.GetConnection(peer), NetDeliveryMethod.ReliableOrdered);
+                server.SendMessage(outgoingMessage, server.GetConnection(peer), NetDeliveryMethod.ReliableOrdered);
             }
             else
             {
-                server.SendMessage(msg, server.Connect(peer), NetDeliveryMethod.ReliableOrdered);
+                server.SendMessage(outgoingMessage, server.Connect(peer), NetDeliveryMethod.ReliableOrdered);
             }
 
             Console.WriteLine("sent file request");
