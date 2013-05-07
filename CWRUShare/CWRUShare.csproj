@@ -35,9 +35,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="logicnp.fileview.wpf, Version=13.0.0.0, Culture=neutral, PublicKeyToken=ff6f27194af4af75, processorArchitecture=MSIL" />
-    <Reference Include="logicnp.folderview.wpf, Version=13.0.0.0, Culture=neutral, PublicKeyToken=ff6f27194af4af75, processorArchitecture=MSIL" />
-    <Reference Include="LogicNP.ShellObjects.WPF, Version=13.0.0.0, Culture=neutral, PublicKeyToken=ff6f27194af4af75, processorArchitecture=MSIL" />
+    <Reference Include="Ookii.Dialogs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0c15020868fd6249, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Visual Studio 2012\Projects\CWRUShare\CWRUShare\Ookii.Dialogs.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -119,6 +120,9 @@
       <Project>{49ba1c69-6104-41ac-a5d8-b54fa9f696e8}</Project>
       <Name>Lidgren.Network</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Service References\Ookii.Dialogs.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

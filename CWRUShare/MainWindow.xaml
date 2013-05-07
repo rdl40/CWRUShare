@@ -1,22 +1,30 @@
 ﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:FolderViewControl="clr-namespace:LogicNP.FolderViewControl;assembly=LogicNP.FolderView.WPF" xmlns:FileViewControl="clr-namespace:LogicNP.FileViewControl;assembly=LogicNP.FileView.WPF" x:Class="CWRUShare.MainWindow"
-        Title="MainWindow" Height="560.5" Width="943.5">
-    <Grid>
+        x:Class="CWRUShare.MainWindow"
+        Title="MainWindow" Height="560.5" Width="439.5">
+    <Grid Height="Auto">
         <Grid.RowDefinitions>
-            <RowDefinition Height="59*"/>
-            <RowDefinition Height="101*"/>
+            <RowDefinition Height = "Auto"></RowDefinition>
+            <RowDefinition Height = "Auto"></RowDefinition>
+            <RowDefinition Height = "Auto"></RowDefinition>
         </Grid.RowDefinitions>
-
-        <FolderViewControl:FolderViewWPF x:Name="FolderView" HorizontalAlignment="Left" Height="299" Margin="240,101,0,0" VerticalAlignment="Top" Width="161" ShowCheckBoxes="True" AutoCheckChildren="True" Loaded="FolderView_Loaded" AutoUpdate="True" ShowSpecialFolders="False" QueryHasSubFolders="False" ShowHiddenObjects="False" ShowFiles="False" BeforeCheck="FolderView_BeforeCheck" QueryNodeCheckState="FolderView_QueryNodeCheckState" Grid.RowSpan="2"/>
-        <FolderViewControl:FolderViewWPF x:Name="FolderView2" HorizontalAlignment="Left" Height="299" Margin="426,101,0,0" VerticalAlignment="Top" Width="160" ShowCheckBoxes="True" AutoCheckChildren="True" AutoUpdate="False" Loaded="FolderView2_Loaded" ShowHiddenObjects="False" ShowSpecialFolders="False" Grid.RowSpan="2"/>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="776,101,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="776,126,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_2"/>
-        <Button Content="List Users" HorizontalAlignment="Left" Margin="776,151,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_3"/>
-
-        <FileViewControl:FileViewWPF x:Name="FileView1" HorizontalAlignment="Left" Height="299" Margin="607,101,0,0" VerticalAlignment="Top" Width="164" CurrentFolderChanged="FileView1_CurrentFolderChanged" ViewStyle="List" ShowCheckBoxes="True" Grid.RowSpan="2"/>
-        <ListBox HorizontalAlignment="Left" Height="299" Margin="10,101,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Width="174"/>
+        <ListView x:Name="peerView" HorizontalAlignment="Left" Height="Auto" Margin="33,0,0,0" VerticalAlignment="Top" Width="Auto" RenderTransformOrigin="4.302,0.429" Grid.Row="1">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <ListView x:Name="fileView" HorizontalAlignment="Left" Height="280" Margin="209,0,0,0" VerticalAlignment="Top" Width="185" SelectionMode="Multiple" Grid.Row="1">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button x:Name="viewFilesButton" Content="View Files" HorizontalAlignment="Left" VerticalAlignment="Top" Width="124" Click="viewFilesButton_Click" Height="39" Margin="81,0,0,0"/>
+        <Button x:Name="downloadButton" Content="Download" HorizontalAlignment="Left" Margin="239,0,0,0" VerticalAlignment="Top" Width="109" RenderTransformOrigin="-2.24,-2.4" Height="39"/>
 
     </Grid>
 </Window>
