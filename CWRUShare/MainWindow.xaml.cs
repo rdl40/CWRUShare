@@ -223,6 +223,9 @@ namespace CWRUShare
 
             peerListTimer = new DispatcherTimer();
             peerListTimer.Interval = TimeSpan.FromSeconds(10);
+            peerListTimer.Tick += PeerListTimerTick;
+            peerListTimer.Start();
+
 
 
 
