@@ -171,7 +171,7 @@ namespace CWRUNet
             using (Udt.Socket socket = new Udt.Socket(AddressFamily.InterNetwork, SocketType.Stream))
             using (Udt.StdFileStream fs = new Udt.StdFileStream(userFileList.GetFilePathFromGuid(id), FileMode.Open))
             {
-                socket.Connect(IPAddress.Loopback, 10000);
+                socket.Connect(msg.SenderEndPoint.Address, 10000);
                 // Send the file length, in bytes
                 socket.Send(BitConverter.GetBytes(fs.Length), 0, sizeof(long));
                 // Send the file contents
