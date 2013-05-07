@@ -226,9 +226,6 @@ namespace CWRUShare
             peerListTimer.Tick += PeerListTimerTick;
             peerListTimer.Start();
 
-
-
-
             Console.WriteLine("Timer started");
         }
 
