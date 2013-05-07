@@ -140,12 +140,19 @@ namespace CWRUShare
                 {
                     ConnectionManager.ReplyToDiscovery(msg);
                 }
+                Console.WriteLine("THROW IT OUT1: " + msg.MessageType);
+
+                if (msg.MessageType == NetIncomingMessageType.WarningMessage)
+                {
+                    Console.WriteLine(msg.Data);
+                }
 
                 return;
             }
 
             if (msg.SenderEndPoint.Address.Equals(thisAddress))
             {
+                Console.WriteLine("THROW IT OUT2: " + msg.MessageType);
                 return;
             }
             
@@ -217,6 +224,7 @@ namespace CWRUShare
             //Process.Start(downloadDirectory);
             fileListRequestSource = new IPEndPoint(IPAddress.Parse((string) peerView.SelectedValue), 14242);
             ConnectionManager.RequestFileList(fileListRequestSource);
+            Console.WriteLine("PRESSED IT");
             fileListTimer.Start();
         }
 

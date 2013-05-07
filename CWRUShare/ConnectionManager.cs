@@ -27,6 +27,7 @@ namespace CWRUNet
         static ConnectionManager()
         {
             config = new NetPeerConfiguration("CWRUShare");
+            config.AutoFlushSendQueue = true;
             config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
             config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
             config.EnableMessageType(NetIncomingMessageType.Data);
@@ -68,13 +69,13 @@ namespace CWRUNet
 
         public static void ExtendedDiscovery()
         {
-            for(int x = 60; x <= 70; x++)
+            for (int x = 60; x <= 70; x++)
             {
-                 for(int y = 70; y <= 75; y++)
-                 {
-                     Console.WriteLine(IPAddress.Parse(String.Format("129.22.{0}.{1}", x, y)));
-                     server.DiscoverKnownPeer(new IPEndPoint(IPAddress.Parse(String.Format("129.22.{0}.{1}", x, y)), 14242));
-                 }
+                for (int y = 70; y <= 75; y++)
+                {
+                    Console.WriteLine(IPAddress.Parse(String.Format("129.22.{0}.{1}", x, y)));
+                    server.DiscoverKnownPeer(new IPEndPoint(IPAddress.Parse(String.Format("129.22.{0}.{1}", x, y)), 14242));
+                }
             }
 
             Console.WriteLine("deep discovery finished");
@@ -124,10 +125,13 @@ namespace CWRUNet
             if (server.GetConnection(peer) != null)
             {
                 server.SendMessage(outgoingMessage, server.GetConnection(peer), NetDeliveryMethod.ReliableOrdered);
+                Console.WriteLine("AIDS");
             }
             else
             {
-                server.SendMessage(outgoingMessage, server.Connect(peer), NetDeliveryMethod.ReliableOrdered);
+                NetConnection connect = server.Connect(peer);
+                Console.WriteLine("NOT AIDS");
+                server.SendMessage(outgoingMessage, connect, NetDeliveryMethod.ReliableOrdered);
             }
         }
 
@@ -144,7 +148,8 @@ namespace CWRUNet
             }
             else
             {
-                server.SendMessage(outgoingMessage, server.Connect(msg.SenderEndPoint), NetDeliveryMethod.ReliableOrdered);
+                NetConnection connect = server.Connect(msg.SenderEndPoint);
+                server.SendMessage(outgoingMessage, connect, NetDeliveryMethod.ReliableOrdered);
             }
         }
 
@@ -153,14 +158,14 @@ namespace CWRUNet
             isListUpdated = true;
             Messages message = Messages.FromByteArray(msg.Data);
             currentListView = ((FileList)message.Data);
-            msg.SenderConnection.Disconnect("Goodbye!");
+            //msg.SenderConnection.Disconnect("Goodbye!");
         }
 
         internal static void RecieveUserList(NetIncomingMessage msg)
         {
             Messages message = Messages.FromByteArray(msg.Data);
             userList.MergeUserList((UserList) message.Data);
-            msg.SenderConnection.Disconnect("Goodbye!");
+            //msg.SenderConnection.Disconnect("Goodbye!");
         }
 
         internal static void SendFiles(NetIncomingMessage msg)
@@ -220,7 +225,8 @@ namespace CWRUNet
             }
             else
             {
-                server.SendMessage(outgoingMessage, server.Connect(peer), NetDeliveryMethod.ReliableOrdered);
+                NetConnection connect = server.Connect(peer);
+                server.SendMessage(outgoingMessage, connect, NetDeliveryMethod.ReliableOrdered);
             }
 
             Console.WriteLine("sent file request");
@@ -271,6 +277,7 @@ namespace CWRUNet
             {
                 server.SendMessage(msg, server.Connect(peer), NetDeliveryMethod.ReliableOrdered);
             }
+
         }
 
         internal static void RecievedDiscoveryReply(NetIncomingMessage msg)
