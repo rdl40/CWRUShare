@@ -143,6 +143,7 @@ namespace CWRUNet
 
         internal static void ReplyToDiscovery(NetIncomingMessage msg)
         {
+            Console.WriteLine("IP: " + msg.SenderEndPoint.Address.ToString());
             Messages message = new Messages();
             message.MessageType = Message.DiscoveryReply;
             NetOutgoingMessage outgoingMessage = server.CreateMessage();
