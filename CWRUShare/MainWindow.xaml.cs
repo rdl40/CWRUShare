@@ -175,6 +175,7 @@ namespace CWRUShare
                     ConnectionManager.SendFileList(msg);
                     break;
                 case Message.RecieveFileList:
+                    Console.Write("RecieveFIleList recieved");
                     ConnectionManager.RecieveFileList(msg);
                     break;
                 case Message.RequestUserList:
