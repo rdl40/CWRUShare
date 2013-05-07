@@ -113,7 +113,7 @@ namespace CWRUShare
             }
             
 
-            Console.WriteLine("Recieved message");
+            Console.WriteLine("Recieved Message: " + msg.MessageType);
                 
 
 
@@ -127,7 +127,7 @@ namespace CWRUShare
             }
 
 
-            Console.WriteLine(msg.MessageType.ToString());
+            Console.WriteLine(msg.SenderEndPoint.Address.ToString());
             Console.WriteLine(msg.Data.Length);
             Messages message = Messages.FromByteArray(msg.Data);
 

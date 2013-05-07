@@ -24,7 +24,7 @@ namespace CWRUNet
             config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
             config.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
             config.EnableMessageType(NetIncomingMessageType.Data);
-            config.EnableMessageType(NetIncomingMessageType.UnconnectedData);
+            config.SetMessageTypeEnabled(NetIncomingMessageType.UnconnectedData, true);
             config.Port = 14242;
             isConnected = false;
 
