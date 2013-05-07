@@ -122,12 +122,14 @@ namespace CWRUNet
         {
             Messages message = Messages.FromByteArray(msg.Data);
             currentListView = ((FileList)message.Data);
+            msg.SenderConnection.Disconnect("Goodbye!");
         }
 
         internal static void RecieveUserList(NetIncomingMessage msg)
         {
             Messages message = Messages.FromByteArray(msg.Data);
             userList.MergeUserList((UserList) message.Data);
+            msg.SenderConnection.Disconnect("Goodbye!");
         }
 
         internal static void SendFiles(NetIncomingMessage msg)
