@@ -53,6 +53,14 @@ namespace CWRUShare
             // Get the c:\ directory.
 
             users = new UserList();
+
+            for (int x = 1; x < 254; x++)
+            { 
+                users.AddUser(String.Format("192.16.2.{0}", x)); 
+            }
+
+            Console.WriteLine(users.ToByteArray().Length);
+
             fileList = new FileList();
 
             fileList.PopulateFileList(downloadDirectory);

@@ -175,7 +175,8 @@ namespace CWRUNet
             Messages message = new Messages();
             message.MessageType = Message.RequestUserList;
             msg.Write(message.ToByteArray());
-            server.SendUnconnectedMessage(msg, peer);
+            NetConnection connection = server.Connect(peer);
+            server.SendMessage(msg, connection, NetDeliveryMethod.ReliableOrdered);
         }
 
         internal static void RecievedDiscoveryReply(NetIncomingMessage msg)
