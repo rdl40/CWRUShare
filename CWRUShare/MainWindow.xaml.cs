@@ -119,16 +119,6 @@ namespace CWRUShare
         {
             var msg = ((NetServer) peer).ReadMessage();
 
-            if (msg.SenderEndPoint.Address.Equals(thisAddress))
-            {
-                return;
-            }
-            
-
-            Console.WriteLine("Recieved Message: " + msg.MessageType);
-
-
-
             if (msg.MessageType != NetIncomingMessageType.UnconnectedData && msg.MessageType != NetIncomingMessageType.Data)
             {
                 if (msg.MessageType == NetIncomingMessageType.DiscoveryRequest)
@@ -139,6 +129,13 @@ namespace CWRUShare
                 return;
             }
 
+            if (msg.SenderEndPoint.Address.Equals(thisAddress))
+            {
+                return;
+            }
+            
+
+            Console.WriteLine("Recieved Message: " + msg.MessageType);
 
             Console.WriteLine(msg.SenderEndPoint.Address.ToString());
             Console.WriteLine(msg.Data.Length);
