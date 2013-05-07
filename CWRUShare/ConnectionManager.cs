@@ -149,7 +149,7 @@ namespace CWRUNet
             NetOutgoingMessage outgoingMessage = server.CreateMessage();
             Messages message = new Messages();
             message.MessageType = Message.DiscoveryReply;
-            outgoingMessage.Data = message.ToByteArray();
+            outgoingMessage.Write(message.ToByteArray());
             Console.WriteLine("Discovery reply length:" + outgoingMessage.Data.Length + "\nAddress: " + msg.SenderEndPoint.Address.ToString());
             server.SendUnconnectedMessage(outgoingMessage, msg.SenderEndPoint);
         }
