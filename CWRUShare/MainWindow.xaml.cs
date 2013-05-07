@@ -186,7 +186,7 @@ namespace CWRUShare
                     ConnectionManager.RecieveUserList(msg);
                     break;
                 case Message.RequestFiles:
-                    Console.Write("RequestFileList recieved");
+                    Console.Write("RequestFile recieved");
                     upload.RunWorkerAsync(msg);
                     //ConnectionManager.SendFiles(msg);
                     break;
