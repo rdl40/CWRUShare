@@ -168,11 +168,11 @@ namespace CWRUNet
             Messages message = Messages.FromByteArray(msg.Data);
             Guid id = new Guid((string)message.Data);
 
-            Messages outGoingMessage = new Messages();
-            outGoingMessage.MessageType = Message.RecieveFile;
-            NetOutgoingMessage outgoingMessage2 = server.CreateMessage();
-            outgoingMessage2.Write(outGoingMessage.ToByteArray());
-            server.SendUnconnectedMessage(outgoingMessage2, msg.SenderEndPoint);
+            //Messages outGoingMessage = new Messages();
+            //outGoingMessage.MessageType = Message.RecieveFile;
+            //NetOutgoingMessage outgoingMessage2 = server.CreateMessage();
+            //outgoingMessage2.Write(outGoingMessage.ToByteArray());
+            //server.SendUnconnectedMessage(outgoingMessage2, msg.SenderEndPoint);
 
             using (Udt.Socket socket = new Udt.Socket(AddressFamily.InterNetwork, SocketType.Stream))
             using (Udt.StdFileStream fs = new Udt.StdFileStream(userFileList.GetFilePathFromGuid(id), FileMode.Open))
@@ -189,7 +189,7 @@ namespace CWRUNet
         {
             using (Udt.Socket socket = new Udt.Socket(AddressFamily.InterNetwork, SocketType.Stream))
             {
-                socket.Bind(IPAddress.Loopback, 10000);
+                socket.Bind(IPAddress.Any, 10000);
                 socket.Listen(10);
 
                 using (Udt.Socket client = socket.Accept())

@@ -283,7 +283,9 @@ namespace CWRUShare
         private void downloadButton_Click(object sender, RoutedEventArgs e)
         {
             ConnectionManager.RequestFiles(fileListRequestSource, (Guid)((ListViewItem)fileView.SelectedItems[0]).Tag);
-            Console.WriteLine("Sent download request: " + fileListRequestSource.Address.ToString());
+            download.RunWorkerAsync();
+
+            //Console.WriteLine("Sent download request: " + fileListRequestSource.Address.ToString());
         }
 
 
