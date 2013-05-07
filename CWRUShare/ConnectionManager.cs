@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.PeerToPeer;
@@ -95,6 +96,7 @@ namespace CWRUNet
             NetOutgoingMessage outgoingMessage = server.CreateMessage();
             outgoingMessage.Write(message.ToByteArray());
             server.SendUnconnectedMessage(outgoingMessage, msg.SenderEndPoint);
+            userList.AddUser(msg.SenderEndPoint.Address.ToString());
         }
 
         internal static void SendFileList(NetIncomingMessage msg)
@@ -120,7 +122,21 @@ namespace CWRUNet
 
         internal static void RecieveFiles(NetIncomingMessage msg)
         {
-            throw new NotImplementedException();
+            //using (Udt.Socket socket = new Udt.Socket(AddressFamily.InterNetwork, SocketType.Stream))
+            //{
+            //    socket.Bind(IPAddress.Loopback, 10000);
+            //    socket.Listen(10);
+
+            //    using (Udt.Socket client = socket.Accept())
+            //    {
+            //        // Receive the file length, in bytes
+            //        byte[] buffer = new byte[8];
+            //        client.Receive(buffer, 0, sizeof(long));
+
+            //        // Receive the file contents (path is where to store the file)
+            //        client.ReceiveFile();
+            //    }
+            //}
         }
 
         internal static void PingReplyRecieved(NetIncomingMessage msg)
@@ -150,6 +166,7 @@ namespace CWRUNet
             message.MessageType = Message.DiscoveryReply;
             outgoingMessage.Write(message.ToByteArray());
             server.SendUnconnectedMessage(outgoingMessage, msg.SenderEndPoint);
+            userList.AddUser(msg.SenderEndPoint.Address.ToString());
         }
 
         internal static void RequestUserList(IPEndPoint peer)

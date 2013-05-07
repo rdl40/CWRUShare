@@ -34,10 +34,16 @@ namespace CWRUShare
     /// </summary>
     public partial class MainWindow : Window
     {
+        private FileList fileList;
         private UserList users;
         private string downloadDirectory;
+        private DispatcherTimer peerListTimer;
         private DispatcherTimer discoveryTimer;
+
+
+
         private static IPAddress thisAddress;
+        private static IPEndPoint fileListRequestSource;
 
         public MainWindow()
         {
@@ -45,9 +51,21 @@ namespace CWRUShare
 
             downloadDirectory = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\CWRUShare\\";
             // Get the c:\ directory.
-            System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(downloadDirectory);
 
             users = new UserList();
+            fileList = new FileList();
+
+            fileList.PopulateFileList(downloadDirectory);
+
+
+            foreach (File file in fileList.GetFileList())
+            {
+                ListViewItem item = new ListViewItem();
+                item.Content = file.Name;
+                item.Tag = file.ID;
+
+                fileView.Items.Add(item);
+            }
 
             thisAddress = (Dns.GetHostEntry(Dns.GetHostName())).AddressList[0];
 
@@ -58,13 +76,6 @@ namespace CWRUShare
                     thisAddress = address;
                     break;
                 }
-            }
-
-            // For each file in the c:\ directory, create a ListViewItem 
-            // and set the icon to the icon extracted from the file. 
-            foreach (System.IO.FileInfo file in dir.GetFiles())
-            {
-                fileView.Items.Add(file.Name);
             }
 
             ConnectionManager.Listen(new SendOrPostCallback(Listener));
@@ -89,7 +100,6 @@ namespace CWRUShare
             {
                 peerView.Items.Add(user);
             }
-
         }
 
         private void DiscoveryTimerTick(object sender, EventArgs e)
@@ -97,6 +107,11 @@ namespace CWRUShare
             Console.WriteLine("starting deep discovery");
             ConnectionManager.ExtendedDiscovery();
             discoveryTimer.Stop();
+        }
+
+        private void PeerListTimerTick(object sender, EventArgs e)
+        {
+            UpdatePeerView();
         }
 
         public static void Listener(object peer)
@@ -146,12 +161,15 @@ namespace CWRUShare
                     ConnectionManager.SendFileList(msg);
                     break;
                 case Message.RecieveFileList:
-                    Console.Write("RecieveFIleList recieved");
-                    ConnectionManager.RecieveFileList(msg);
+                    if (msg.SenderEndPoint.Equals(fileListRequestSource))
+                    {
+                        ConnectionManager.RecieveFileList(msg);
+                    }
                     break;
                 case Message.RequestUserList:
                     Console.Write("RequestUserList recieved");
                     ConnectionManager.SendUserList(msg);
+
                     break;
                 case Message.RecieveUserList:
                     Console.Write("RecieveUserList recieved");
@@ -193,6 +211,12 @@ namespace CWRUShare
             discoveryTimer.Interval = TimeSpan.FromSeconds(10);
             discoveryTimer.Tick += DiscoveryTimerTick;
             discoveryTimer.Start();
+
+            peerListTimer = new DispatcherTimer();
+            peerListTimer.Interval = TimeSpan.FromSeconds(10);
+
+
+
             Console.WriteLine("Timer started");
         }
 

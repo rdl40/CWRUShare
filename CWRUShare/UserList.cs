@@ -24,7 +24,15 @@ namespace CWRUShare
 
         public void AddUser(string ipAddress)
         {
-            Users.Add(ipAddress, DateTime.Now.AddMinutes(5));
+            if (!Users.ContainsKey(ipAddress))
+            {
+                Users.Add(ipAddress, DateTime.Now.AddMinutes(5));
+            }
+            else
+            {
+                UpdateUser(ipAddress);
+            }
+
         }
 
         public void UpdateUser(string ipAddress)
@@ -61,6 +69,7 @@ namespace CWRUShare
 
         public List<IPEndPoint> GetActivePeers()
         {
+            PopulateActivePeers();
             List<IPEndPoint> toBeReturned = new List<IPEndPoint>();
 
             foreach (var address in _activePeers)
@@ -74,7 +83,6 @@ namespace CWRUShare
         public IPEndPoint GetRandomPeer()
         {
             PopulateActivePeers();
-
             if (_activePeers.Count >= 1)
             {
                 return new IPEndPoint((new Random().Next(_activePeers.Count)), 14242);
