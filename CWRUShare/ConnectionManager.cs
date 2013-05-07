@@ -69,14 +69,14 @@ namespace CWRUNet
 
         public static void ExtendedDiscovery()
         {
-            for (int x = 60; x <= 70; x++)
-            {
-                for (int y = 70; y <= 75; y++)
-                {
-                    Console.WriteLine(IPAddress.Parse(String.Format("129.22.{0}.{1}", x, y)));
-                    server.DiscoverKnownPeer(new IPEndPoint(IPAddress.Parse(String.Format("129.22.{0}.{1}", x, y)), 14242));
-                }
-            }
+            //for (int x = 60; x <= 70; x++)
+            //{
+            //    for (int y = 70; y <= 75; y++)
+            //    {
+            //        Console.WriteLine(IPAddress.Parse(String.Format("129.22.{0}.{1}", x, y)));
+            //        server.DiscoverKnownPeer(new IPEndPoint(IPAddress.Parse(String.Format("129.22.{0}.{1}", x, y)), 14242));
+            //    }
+            //}
 
             Console.WriteLine("deep discovery finished");
         }
@@ -125,12 +125,12 @@ namespace CWRUNet
             if (server.GetConnection(peer) != null)
             {
                 server.SendMessage(outgoingMessage, server.GetConnection(peer), NetDeliveryMethod.ReliableOrdered);
-                Console.WriteLine("AIDS");
+              
             }
             else
             {
                 NetConnection connect = server.Connect(peer);
-                Console.WriteLine("NOT AIDS");
+   
                 server.SendMessage(outgoingMessage, connect, NetDeliveryMethod.ReliableOrdered);
             }
         }
@@ -179,34 +179,36 @@ namespace CWRUNet
             //outgoingMessage2.Write(outGoingMessage.ToByteArray());
             //server.SendUnconnectedMessage(outgoingMessage2, msg.SenderEndPoint);
 
-            using (Udt.Socket socket = new Udt.Socket(AddressFamily.InterNetwork, SocketType.Stream))
-            using (Udt.StdFileStream fs = new Udt.StdFileStream(userFileList.GetFilePathFromGuid(id), FileMode.Open))
+            Udt.Socket socket = new Udt.Socket(AddressFamily.InterNetwork, SocketType.Stream);
+            Udt.StdFileStream fs = new Udt.StdFileStream(userFileList.GetFilePathFromGuid(id), FileMode.Open);
             {
+                socket.BlockingSend = true;
                 socket.Connect(msg.SenderEndPoint.Address, 10000);
                 // Send the file length, in bytes
                 socket.Send(BitConverter.GetBytes(fs.Length), 0, sizeof(long));
                 // Send the file contents
                 socket.SendFile(fs);
+              
             }
         }
 
         internal static void RecieveFiles(NetIncomingMessage msg)
         {
-            using (Udt.Socket socket = new Udt.Socket(AddressFamily.InterNetwork, SocketType.Stream))
-            {
+            Udt.Socket socket = new Udt.Socket(AddressFamily.InterNetwork, SocketType.Stream);
+            
                 socket.Bind(IPAddress.Any, 10000);
                 socket.Listen(10);
 
-                using (Udt.Socket client = socket.Accept())
-                {
+            Udt.Socket client = socket.Accept();
+                
                     // Receive the file length, in bytes
                     byte[] buffer = new byte[8];
                     client.Receive(buffer, 0, sizeof(long));
 
                     // Receive the file contents (path is where to store the file)
                     client.ReceiveFile("hello.txt", BitConverter.ToInt64(buffer, 0));
-                }
-            }
+                
+            
 
             Console.WriteLine("OI!");
         }
