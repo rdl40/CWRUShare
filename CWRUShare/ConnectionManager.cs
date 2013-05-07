@@ -145,12 +145,12 @@ namespace CWRUNet
 
         internal static void ReplyToDiscovery(NetIncomingMessage msg)
         {
-            Console.WriteLine("IP: " + msg.SenderEndPoint.Address.ToString());
             Messages message = new Messages();
             message.MessageType = Message.DiscoveryReply;
             NetOutgoingMessage outgoingMessage = server.CreateMessage();
             outgoingMessage.Data = message.ToByteArray();
-            Console.WriteLine("AIDS: " + message.ToByteArray().Length);
+
+            Console.WriteLine("Discovery reply length:" + outgoingMessage.Data.Length);
             server.SendUnconnectedMessage(outgoingMessage, msg.SenderEndPoint);
         }
 

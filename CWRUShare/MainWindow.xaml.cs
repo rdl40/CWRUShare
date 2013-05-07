@@ -128,6 +128,7 @@ namespace CWRUShare
 
 
             Console.WriteLine(msg.MessageType.ToString());
+            Console.WriteLine(msg.Data.Length);
             Messages message = Messages.FromByteArray(msg.Data);
 
             switch (message.MessageType)

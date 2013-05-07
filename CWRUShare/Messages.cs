@@ -23,14 +23,6 @@ namespace CWRUShare
             BinaryFormatter binaryForm = new BinaryFormatter();
             MemoryStream memoryStream = new MemoryStream();
             binaryForm.Serialize(memoryStream, this);
-
-            MemoryStream memoryStream2 = new MemoryStream();
-            memoryStream2.Write(memoryStream.ToArray(), 0, memoryStream.ToArray().Length);
-            memoryStream2.Seek(0, SeekOrigin.Begin);
-            Messages test = (Messages) binaryForm.Deserialize(memoryStream2);
-
-            memoryStream.Flush();
-            Console.WriteLine(memoryStream.ToArray().Length);
             return memoryStream.ToArray();
         }
 
