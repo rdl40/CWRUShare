@@ -114,8 +114,15 @@ namespace CWRUNet
             message.MessageType = Message.RequestFileList;
             NetOutgoingMessage outgoingMessage = server.CreateMessage();
             outgoingMessage.Write(message.ToByteArray());
-            NetConnection connection = server.Connect(peer);
-            server.SendMessage(outgoingMessage, connection, NetDeliveryMethod.ReliableOrdered);
+            if (server.GetConnection(peer) != null)
+            {
+                server.SendMessage(outgoingMessage, server.GetConnection(peer), NetDeliveryMethod.ReliableOrdered);
+            }
+            else
+            {
+                server.SendMessage(outgoingMessage, server.Connect(peer), NetDeliveryMethod.ReliableOrdered);
+            }
+            
         }
 
         internal static void RecieveFileList(NetIncomingMessage msg)
@@ -192,8 +199,15 @@ namespace CWRUNet
             Messages message = new Messages();
             message.MessageType = Message.RequestUserList;
             msg.Write(message.ToByteArray());
-            NetConnection connection = server.Connect(peer);
-            server.SendMessage(msg, connection, NetDeliveryMethod.ReliableOrdered);
+
+            if (server.GetConnection(peer) != null)
+            {
+                server.SendMessage(msg, server.GetConnection(peer), NetDeliveryMethod.ReliableOrdered);
+            }
+            else
+            {
+                server.SendMessage(msg, server.Connect(peer), NetDeliveryMethod.ReliableOrdered);
+            }
         }
 
         internal static void RecievedDiscoveryReply(NetIncomingMessage msg)
