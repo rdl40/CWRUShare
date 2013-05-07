@@ -39,6 +39,7 @@ namespace CWRUShare
         private string downloadDirectory;
         private DispatcherTimer peerListTimer;
         private DispatcherTimer discoveryTimer;
+        private DispatcherTimer fileListTimer;
 
 
 
@@ -105,6 +106,15 @@ namespace CWRUShare
             Console.WriteLine("starting deep discovery");
             ConnectionManager.ExtendedDiscovery();
             discoveryTimer.Stop();
+        }
+
+        private void FileListTimerTick(object sender, EventArgs e)
+        {
+            if (ConnectionManager.IsListUpdated())
+            {
+                fileListTimer.Stop();
+                UpdateFileList();
+            }
         }
 
         private void PeerListTimerTick(object sender, EventArgs e)
@@ -196,6 +206,7 @@ namespace CWRUShare
         {
             //Process.Start(downloadDirectory);
             ConnectionManager.RequestFileList(new IPEndPoint(IPAddress.Parse((string)peerView.SelectedValue), 14242));
+            fileListTimer.Start();
         }
 
         private void Window_Loaded_1(object sender, RoutedEventArgs e)
@@ -210,6 +221,10 @@ namespace CWRUShare
             peerListTimer.Interval = TimeSpan.FromSeconds(10);
             peerListTimer.Tick += PeerListTimerTick;
             peerListTimer.Start();
+
+            fileListTimer = new DispatcherTimer();
+            fileListTimer.Interval = TimeSpan.FromMilliseconds(10);
+            fileListTimer.Tick += FileListTimerTick;
 
             Console.WriteLine("Timer started");
         }

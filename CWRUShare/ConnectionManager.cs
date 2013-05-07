@@ -21,6 +21,8 @@ namespace CWRUNet
         private static FileList currentListView;
         private static FileList userFileList;
 
+        private static bool isListUpdated;
+
         static ConnectionManager()
         {
             config = new NetPeerConfiguration("CWRUShare");
@@ -29,6 +31,7 @@ namespace CWRUNet
             config.EnableMessageType(NetIncomingMessageType.Data);
             config.SetMessageTypeEnabled(NetIncomingMessageType.UnconnectedData, true);
             currentListView = new FileList();
+            isListUpdated = false;
 
             config.Port = 14242;
             isConnected = false;
@@ -114,6 +117,9 @@ namespace CWRUNet
             message.MessageType = Message.RequestFileList;
             NetOutgoingMessage outgoingMessage = server.CreateMessage();
             outgoingMessage.Write(message.ToByteArray());
+
+            isListUpdated = false;
+
             if (server.GetConnection(peer) != null)
             {
                 server.SendMessage(outgoingMessage, server.GetConnection(peer), NetDeliveryMethod.ReliableOrdered);
@@ -143,6 +149,7 @@ namespace CWRUNet
 
         internal static void RecieveFileList(NetIncomingMessage msg)
         {
+            isListUpdated = true;
             Messages message = Messages.FromByteArray(msg.Data);
             currentListView = ((FileList)message.Data);
             msg.SenderConnection.Disconnect("Goodbye!");
@@ -249,5 +256,9 @@ namespace CWRUNet
             return currentListView.GetFileList();
         }
 
+        public static bool IsListUpdated()
+        {
+            return isListUpdated;
+        }
     }
 }
