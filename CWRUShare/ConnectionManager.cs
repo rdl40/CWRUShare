@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -9,6 +10,7 @@ using System.Net.PeerToPeer;
 using System.Threading;
 using CWRUShare;
 using Lidgren.Network;
+using File = CWRUShare.File;
 
 namespace CWRUNet
 {
@@ -20,7 +22,6 @@ namespace CWRUNet
         private static bool isConnected;
         private static FileList currentListView;
         private static FileList userFileList;
-
         private static bool isListUpdated;
 
         static ConnectionManager()
@@ -164,26 +165,53 @@ namespace CWRUNet
 
         internal static void SendFiles(NetIncomingMessage msg)
         {
-            throw new NotImplementedException();
+            Guid id = new Guid(msg.Data);
+            userFileList.GetFilePathFromGuid(id);
+
+            using (Udt.Socket socket = new Udt.Socket(AddressFamily.InterNetwork, SocketType.Stream))
+            using (Udt.StdFileStream fs = new Udt.StdFileStream(userFileList.GetFilePathFromGuid(id), FileMode.Open))
+            {
+                socket.Connect(IPAddress.Loopback, 10000);
+                // Send the file length, in bytes
+                socket.Send(BitConverter.GetBytes(fs.Length), 0, sizeof(long));
+                // Send the file contents
+                socket.SendFile(fs);
+            }
         }
 
         internal static void RecieveFiles(NetIncomingMessage msg)
         {
-            //using (Udt.Socket socket = new Udt.Socket(AddressFamily.InterNetwork, SocketType.Stream))
-            //{
-            //    socket.Bind(IPAddress.Loopback, 10000);
-            //    socket.Listen(10);
+            using (Udt.Socket socket = new Udt.Socket(AddressFamily.InterNetwork, SocketType.Stream))
+            {
+                socket.Bind(IPAddress.Loopback, 10000);
+                socket.Listen(10);
 
-            //    using (Udt.Socket client = socket.Accept())
-            //    {
-            //        // Receive the file length, in bytes
-            //        byte[] buffer = new byte[8];
-            //        client.Receive(buffer, 0, sizeof(long));
+                using (Udt.Socket client = socket.Accept())
+                {
+                    // Receive the file length, in bytes
+                    byte[] buffer = new byte[8];
+                    client.Receive(buffer, 0, sizeof(long));
 
-            //        // Receive the file contents (path is where to store the file)
-            //        client.ReceiveFile();
-            //    }
-            //}
+                    // Receive the file contents (path is where to store the file)
+                    client.ReceiveFile("hello.txt", BitConverter.ToInt64(buffer, 0));
+                }
+            }
+        }
+
+        internal static void RequestFiles(IPEndPoint peer,  Guid file)
+        {
+            NetOutgoingMessage msg = server.CreateMessage();
+            Messages message = new Messages();
+            message.MessageType = Message.RequestFiles;
+            msg.Write(file.ToByteArray());
+            if (server.GetConnection(peer) != null)
+            {
+                server.SendMessage(msg, server.GetConnection(peer), NetDeliveryMethod.ReliableOrdered);
+            }
+            else
+            {
+                server.SendMessage(msg, server.Connect(peer), NetDeliveryMethod.ReliableOrdered);
+            }
         }
 
         internal static void PingReplyRecieved(NetIncomingMessage msg)

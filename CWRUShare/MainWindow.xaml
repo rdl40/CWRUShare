@@ -28,7 +28,7 @@
             </ListView.View>
         </ListView>
         <Button x:Name="viewFilesButton" Content="View Files" HorizontalAlignment="Left" VerticalAlignment="Top" Width="124" Click="viewFilesButton_Click" Height="39" Margin="81,0,0,0" IsEnabled="False"/>
-        <Button x:Name="downloadButton" Content="Download" HorizontalAlignment="Left" Margin="239,0,0,0" VerticalAlignment="Top" Width="109" RenderTransformOrigin="-2.24,-2.4" Height="39"/>
+        <Button x:Name="downloadButton" Content="Download" HorizontalAlignment="Left" Margin="239,0,0,0" VerticalAlignment="Top" Width="109" RenderTransformOrigin="-2.24,-2.4" Height="39" IsEnabled="False" Click="downloadButton_Click"/>
 
         <ShellObjects:SystemIdleTimerWPF HorizontalAlignment="Left" Height="100" Margin="569,111,-237,0" Grid.Row="1" VerticalAlignment="Top" Width="100"/>
         <ShellObjects:SystemIdleTimerWPF HorizontalAlignment="Left" Height="100" Margin="-134,12,0,0" Grid.Row="1" VerticalAlignment="Top" Width="100"/>

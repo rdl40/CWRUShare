@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -40,15 +41,22 @@ namespace CWRUShare
         private DispatcherTimer peerListTimer;
         private DispatcherTimer discoveryTimer;
         private DispatcherTimer fileListTimer;
-
-
-
         private static IPAddress thisAddress;
         private static IPEndPoint fileListRequestSource;
+
+        private static BackgroundWorker download = new BackgroundWorker();
+        private static BackgroundWorker upload = new BackgroundWorker();
 
         public MainWindow()
         {
             InitializeComponent();
+
+          
+            upload.DoWork += new DoWorkEventHandler(upload_DoWork);
+            upload.RunWorkerCompleted += new RunWorkerCompletedEventHandler(upload_RunWorkerCompleted);
+
+            download.DoWork += new DoWorkEventHandler(download_DoWork);
+            download.RunWorkerCompleted += new RunWorkerCompletedEventHandler(download_RunWorkerCompleted);
 
             downloadDirectory = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\CWRUShare\\";
             // Get the c:\ directory.
@@ -172,19 +180,19 @@ namespace CWRUShare
                 case Message.RequestUserList:
                     Console.Write("RequestUserList recieved");
                     ConnectionManager.SendUserList(msg);
-
                     break;
                 case Message.RecieveUserList:
                     Console.Write("RecieveUserList recieved");
                     ConnectionManager.RecieveUserList(msg);
                     break;
                 case Message.RequestFiles:
-                    Console.Write("REquestFiles recieved");
-                    ConnectionManager.SendFiles(msg);
+                    upload.RunWorkerAsync(msg);
+                    //ConnectionManager.SendFiles(msg);
                     break;
                 case Message.RecieveFile:
+                    download.RunWorkerAsync(msg);
                     Console.Write("RecieveFile recieved");
-                    ConnectionManager.RecieveFiles(msg);
+                    //ConnectionManager.RecieveFiles(msg);
                     break;
                 case Message.Leaving:
                     Console.Write("Leaving recieved");
@@ -205,7 +213,8 @@ namespace CWRUShare
         private void viewFilesButton_Click(object sender, RoutedEventArgs e)
         {
             //Process.Start(downloadDirectory);
-            ConnectionManager.RequestFileList(new IPEndPoint(IPAddress.Parse((string)peerView.SelectedValue), 14242));
+            fileListRequestSource = new IPEndPoint(IPAddress.Parse((string) peerView.SelectedValue), 14242);
+            ConnectionManager.RequestFileList(fileListRequestSource);
             fileListTimer.Start();
         }
 
@@ -246,7 +255,36 @@ namespace CWRUShare
 
                 fileView.Items.Add(item);
             }
+
+            downloadButton.IsEnabled = true;
         }
+
+        private static void download_DoWork(object sender, DoWorkEventArgs e)
+        {
+            ConnectionManager.RecieveFiles((NetIncomingMessage)sender);
+        }
+
+        private static void download_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+
+        }
+
+        private static void upload_DoWork(object sender, DoWorkEventArgs e)
+        {
+            ConnectionManager.SendFiles((NetIncomingMessage)sender);
+        }
+
+        private static void upload_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+
+        }
+
+        private void downloadButton_Click(object sender, RoutedEventArgs e)
+        {
+            ConnectionManager.RequestFiles(((NetIncomingMessage)sender).SenderEndPoint, ((File)fileView.SelectedValue).ID);
+        }
+
+
 
     }
 }
