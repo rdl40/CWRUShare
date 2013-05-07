@@ -166,7 +166,7 @@ namespace CWRUNet
         internal static void SendFiles(NetIncomingMessage msg)
         {
             Messages message = Messages.FromByteArray(msg.Data);
-            Guid id = new Guid((byte[])message.Data);
+            Guid id = new Guid((string)message.Data);
 
             using (Udt.Socket socket = new Udt.Socket(AddressFamily.InterNetwork, SocketType.Stream))
             using (Udt.StdFileStream fs = new Udt.StdFileStream(userFileList.GetFilePathFromGuid(id), FileMode.Open))
@@ -204,7 +204,7 @@ namespace CWRUNet
         {
             Messages message = new Messages();
             message.MessageType = Message.RequestFiles;
-            message.Data = file.ToByteArray();
+            message.Data = file.ToString();
             NetOutgoingMessage outgoingMessage = server.CreateMessage();
             outgoingMessage.Write(message.ToByteArray());
 
