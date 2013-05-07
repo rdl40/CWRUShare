@@ -129,7 +129,7 @@ namespace CWRUShare
 
 
 
-            if (msg.MessageType != NetIncomingMessageType.UnconnectedData || msg.MessageType != NetIncomingMessageType.Data)
+            if (msg.MessageType != NetIncomingMessageType.UnconnectedData && msg.MessageType != NetIncomingMessageType.Data)
             {
                 if (msg.MessageType == NetIncomingMessageType.DiscoveryRequest)
                 {
