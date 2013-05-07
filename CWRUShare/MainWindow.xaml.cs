@@ -133,16 +133,17 @@ namespace CWRUShare
             
 
             Console.WriteLine("Recieved Message: " + msg.MessageType);
-                
 
 
-            if (msg.MessageType != NetIncomingMessageType.UnconnectedData)
+
+            if (msg.MessageType != NetIncomingMessageType.UnconnectedData || msg.MessageType != NetIncomingMessageType.Data)
             {
                 if (msg.MessageType == NetIncomingMessageType.DiscoveryRequest)
                 {
                     ConnectionManager.ReplyToDiscovery(msg);
-                    return;
                 }
+
+                return;
             }
 
 
