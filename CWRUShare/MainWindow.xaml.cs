@@ -57,6 +57,7 @@ namespace CWRUShare
             }
 
             ConnectionManager.SetUserList(users);
+            ConnectionManager.Listen(new SendOrPostCallback(Listener));
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -143,10 +144,7 @@ namespace CWRUShare
         public async static void Sender()
         {
             var tasker = Task.Factory.StartNew(ConnectionManager.Send);
-
             await tasker;
-
-            Console.WriteLine("oooh yaaaa");
         }
 
         private void viewFilesButton_Click(object sender, RoutedEventArgs e)

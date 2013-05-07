@@ -55,9 +55,9 @@ namespace CWRUNet
 
         public static void ExtendedDiscovery()
         {
-            for(int x = 50; x <= 70; x++)
+            for(int x = 60; x <= 70; x++)
             {
-                 for(int y = 0; y <= 254; y++)
+                 for(int y = 50; y <= 70; y++)
                  {
                      server.DiscoverKnownPeer(new IPEndPoint(IPAddress.Parse(String.Format("129.22.{0}.{1}", x, y)), 14242));
                  }
