@@ -20,7 +20,7 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <ListView x:Name="fileView" HorizontalAlignment="Left" Height="280" Margin="209,0,0,0" VerticalAlignment="Top" Width="185" SelectionMode="Multiple" Grid.Row="1">
+        <ListView x:Name="fileView" HorizontalAlignment="Left" Height="280" Margin="209,0,0,0" VerticalAlignment="Top" Width="185" SelectionMode="Single" Grid.Row="1">
             <ListView.View>
                 <GridView>
                     <GridViewColumn/>

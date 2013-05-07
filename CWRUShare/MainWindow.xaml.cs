@@ -191,7 +191,6 @@ namespace CWRUShare
                     break;
                 case Message.RecieveFile:
                     download.RunWorkerAsync(msg);
-                    Console.Write("RecieveFile recieved");
                     //ConnectionManager.RecieveFiles(msg);
                     break;
                 case Message.Leaving:
@@ -266,7 +265,7 @@ namespace CWRUShare
 
         private static void download_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-
+            Console.WriteLine("download completed");
         }
 
         private static void upload_DoWork(object sender, DoWorkEventArgs e)
@@ -276,12 +275,13 @@ namespace CWRUShare
 
         private static void upload_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-
+            Console.WriteLine("upload completed");
         }
 
         private void downloadButton_Click(object sender, RoutedEventArgs e)
         {
-            ConnectionManager.RequestFiles(((NetIncomingMessage)sender).SenderEndPoint, ((File)fileView.SelectedValue).ID);
+            ConnectionManager.RequestFiles(fileListRequestSource, (Guid)((ListViewItem)fileView.SelectedItems[0]).Tag);
+            Console.WriteLine("Sent download request: " + fileListRequestSource.Address.ToString());
         }
 
 
