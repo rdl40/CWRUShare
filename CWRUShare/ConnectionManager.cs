@@ -71,7 +71,6 @@ namespace CWRUNet
             server.DiscoverLocalPeers(14242);
 
             List<IPEndPoint> temp = userList.GetActivePeers();
-
             foreach (var endpoint in temp)
             {
                 server.DiscoverKnownPeer(endpoint);
@@ -85,7 +84,7 @@ namespace CWRUNet
             Messages message = new Messages();
             message.MessageType = Message.Ping;
             NetOutgoingMessage msg = server.CreateMessage();
-            msg.Data = message.ToByteArray();
+            msg.Write(message.ToByteArray());
             server.SendUnconnectedMessage(msg, location);
         }
 
@@ -94,8 +93,8 @@ namespace CWRUNet
             Messages message = new Messages();
             message.MessageType = Message.Ping;
             NetOutgoingMessage outgoingMessage = server.CreateMessage();
-            outgoingMessage.Data = message.ToByteArray();
-            server.SendMessage(outgoingMessage, msg.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            outgoingMessage.Write(message.ToByteArray());
+            server.SendUnconnectedMessage(outgoingMessage, msg.SenderEndPoint);
         }
 
         internal static void SendFileList(NetIncomingMessage msg)
@@ -135,7 +134,7 @@ namespace CWRUNet
             message.MessageType = Message.RecieveUserList;
             message.Data = userList;
             NetOutgoingMessage outgoingMessage = server.CreateMessage();
-            outgoingMessage.Data = message.ToByteArray();
+            outgoingMessage.Write(message.ToByteArray());
             server.SendUnconnectedMessage(outgoingMessage, msg.SenderEndPoint);
         }
 
@@ -150,7 +149,6 @@ namespace CWRUNet
             Messages message = new Messages();
             message.MessageType = Message.DiscoveryReply;
             outgoingMessage.Write(message.ToByteArray());
-            Console.WriteLine("Discovery reply length:" + outgoingMessage.Data.Length + "\nAddress: " + msg.SenderEndPoint.Address.ToString());
             server.SendUnconnectedMessage(outgoingMessage, msg.SenderEndPoint);
         }
 
@@ -159,7 +157,7 @@ namespace CWRUNet
             NetOutgoingMessage msg = server.CreateMessage();
             Messages message = new Messages();
             message.MessageType = Message.RequestUserList;
-            msg.Data = message.ToByteArray();
+            msg.Write(message.ToByteArray());
             server.SendUnconnectedMessage(msg, peer);
         }
 

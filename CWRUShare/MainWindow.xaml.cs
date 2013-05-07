@@ -34,10 +34,6 @@ namespace CWRUShare
     /// </summary>
     public partial class MainWindow : Window
     {
-        private ShareManager shareManager = new ShareManager();
-
-       // private FOVTreeNode supertemp;
-
         private UserList users;
         private string downloadDirectory;
         private DispatcherTimer discoveryTimer;
