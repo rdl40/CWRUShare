@@ -54,6 +54,8 @@ namespace CWRUShare
 
             users = new UserList();
 
+            //users.AddUser("192.168.1.1");
+
             fileList = new FileList();
 
             fileList.PopulateFileList(downloadDirectory);
