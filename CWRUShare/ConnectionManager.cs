@@ -122,7 +122,23 @@ namespace CWRUNet
             {
                 server.SendMessage(outgoingMessage, server.Connect(peer), NetDeliveryMethod.ReliableOrdered);
             }
-            
+        }
+
+        internal static void SendFileList(NetIncomingMessage msg)
+        {
+            Messages message = new Messages();
+            message.MessageType = Message.RecieveFileList;
+            message.Data = userFileList;
+            NetOutgoingMessage outgoingMessage = server.CreateMessage();
+            outgoingMessage.Write(message.ToByteArray());
+            if (server.GetConnection(msg.SenderEndPoint) != null)
+            {
+                server.SendMessage(outgoingMessage, server.GetConnection(msg.SenderEndPoint), NetDeliveryMethod.ReliableOrdered);
+            }
+            else
+            {
+                server.SendMessage(outgoingMessage, server.Connect(msg.SenderEndPoint), NetDeliveryMethod.ReliableOrdered);
+            }
         }
 
         internal static void RecieveFileList(NetIncomingMessage msg)
