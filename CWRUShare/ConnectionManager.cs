@@ -90,9 +90,8 @@ namespace CWRUNet
         {
             Messages message = new Messages();
             message.MessageType = Message.Ping;
-
             NetOutgoingMessage outgoingMessage = server.CreateMessage();
-            msg.Data = message.ToByteArray();
+            outgoingMessage.Data = message.ToByteArray();
             server.SendMessage(outgoingMessage, msg.SenderConnection, NetDeliveryMethod.ReliableOrdered);
         }
 
@@ -133,8 +132,8 @@ namespace CWRUNet
             message.MessageType = Message.RecieveUserList;
             message.Data = userList;
             NetOutgoingMessage outgoingMessage = server.CreateMessage();
-            msg.Data = message.ToByteArray();
-            server.SendMessage(outgoingMessage, msg.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            outgoingMessage.Data = message.ToByteArray();
+            server.SendUnconnectedMessage(outgoingMessage, msg.SenderEndPoint);
         }
 
         public static bool IsConnected()
@@ -147,8 +146,8 @@ namespace CWRUNet
             Messages message = new Messages();
             message.MessageType = Message.DiscoveryReply;
             NetOutgoingMessage outgoingMessage = server.CreateMessage();
-            msg.Data = message.ToByteArray();
-            server.SendMessage(outgoingMessage, msg.SenderConnection, NetDeliveryMethod.ReliableOrdered);
+            outgoingMessage.Data = message.ToByteArray();
+            server.SendUnconnectedMessage(outgoingMessage, msg.SenderEndPoint);
         }
 
         internal static void RequestUserList(IPEndPoint peer)

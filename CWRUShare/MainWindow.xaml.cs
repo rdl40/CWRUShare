@@ -56,8 +56,9 @@ namespace CWRUShare
                 fileView.Items.Add(file.Name);
             }
 
-            ConnectionManager.SetUserList(users);
             ConnectionManager.Listen(new SendOrPostCallback(Listener));
+            ConnectionManager.SetUserList(users);
+
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -98,41 +99,54 @@ namespace CWRUShare
                 if (msg.MessageType == NetIncomingMessageType.DiscoveryRequest)
                 {
                     ConnectionManager.ReplyToDiscovery(msg);
+                    return;
                 }
             }
 
+
+            Console.WriteLine(msg.MessageType.ToString());
             Messages message = Messages.FromByteArray(msg.Data);
 
             switch (message.MessageType)
             {
                 case Message.DiscoveryReply:
+                    Console.Write("Discovery reply recieved");
                     ConnectionManager.RecievedDiscoveryReply(msg);
                     break;
                 case Message.Ping:
+                    Console.Write("Ping recieved");
                     ConnectionManager.ReplyToPing(msg);
                     break;
                 case Message.PingReply:
+                    Console.Write("PingReply recieved");
                     ConnectionManager.PingReplyRecieved(msg);
                     break;
                 case Message.RequestFileList:
+                    Console.Write("RequestFileList recieved");
                     ConnectionManager.SendFileList(msg);
                     break;
                 case Message.RecieveFileList:
+                    Console.Write("RecieveFIleList recieved");
                     ConnectionManager.RecieveFileList(msg);
                     break;
                 case Message.RequestUserList:
+                    Console.Write("RequestUserList recieved");
                     ConnectionManager.SendUserList(msg);
                     break;
                 case Message.RecieveUserList:
+                    Console.Write("RecieveUserList recieved");
                     ConnectionManager.RecieveUserList(msg);
                     break;
                 case Message.RequestFiles:
+                    Console.Write("REquestFiles recieved");
                     ConnectionManager.SendFiles(msg);
                     break;
                 case Message.RecieveFile:
+                    Console.Write("RecieveFile recieved");
                     ConnectionManager.RecieveFiles(msg);
                     break;
                 case Message.Leaving:
+                    Console.Write("Leaving recieved");
                     break;
 
                 default:

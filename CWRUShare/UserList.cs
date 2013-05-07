@@ -98,6 +98,7 @@ namespace CWRUShare
             BinaryFormatter binaryForm = new BinaryFormatter();
             MemoryStream memoryStream = new MemoryStream();
             memoryStream.Write(data, 0, data.Length);
+            memoryStream.Seek(0, SeekOrigin.Begin);
             return (UserList)binaryForm.Deserialize(memoryStream);
         }
 
