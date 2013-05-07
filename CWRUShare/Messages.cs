@@ -30,7 +30,6 @@ namespace CWRUShare
         {
             Console.WriteLine(data.Length);
             BinaryFormatter binaryForm = new BinaryFormatter();
-
             MemoryStream memoryStream = new MemoryStream();
             memoryStream.Write(data, 0, data.Length);
             memoryStream.Seek(0, SeekOrigin.Begin);

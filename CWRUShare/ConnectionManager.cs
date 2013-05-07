@@ -76,13 +76,14 @@ namespace CWRUNet
             {
                 server.DiscoverKnownPeer(endpoint);
             }
+
+            server.DiscoverKnownPeer(new IPEndPoint(IPAddress.Parse("129.22.63.71"), 14242));
         }
 
         internal static void Ping(IPEndPoint location)
         {
             Messages message = new Messages();
             message.MessageType = Message.Ping;
-
             NetOutgoingMessage msg = server.CreateMessage();
             msg.Data = message.ToByteArray();
             server.SendUnconnectedMessage(msg, location);
@@ -145,12 +146,11 @@ namespace CWRUNet
 
         internal static void ReplyToDiscovery(NetIncomingMessage msg)
         {
+            NetOutgoingMessage outgoingMessage = server.CreateMessage();
             Messages message = new Messages();
             message.MessageType = Message.DiscoveryReply;
-            NetOutgoingMessage outgoingMessage = server.CreateMessage();
             outgoingMessage.Data = message.ToByteArray();
-
-            Console.WriteLine("Discovery reply length:" + outgoingMessage.Data.Length);
+            Console.WriteLine("Discovery reply length:" + outgoingMessage.Data.Length + "\nAddress: " + msg.SenderEndPoint.Address.ToString());
             server.SendUnconnectedMessage(outgoingMessage, msg.SenderEndPoint);
         }
 
